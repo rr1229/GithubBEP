@@ -55,7 +55,7 @@ def constantB(n,T,v):
     return Bn
 
 def constantC(n,v,T):
-    friction=darcyfriction(v, T)
+    friction=darcyfriction(v, T)/blocks
     Cn=(-p.g*p.beta*np.sin(p.angle[n]))/(p.kw1+p.kw2+friction*p.length*(p.r**-1))
     return Cn
 
