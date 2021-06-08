@@ -22,12 +22,12 @@ C_pwall= 285 # (J/(kg K)) specific heat capacity of wall (taken from Haffmans)
 T_c= 40+273.15   # temperature outside water in Kelvin
 
 'Geometrie' 
-N= 40 #number of segments, has to be multiple of 4
+N= 4000 #number of segments, has to be multiple of 4
 length= 4*110.4*10**-3 #length of entire system (each segment is 1/4 length)
 anglepipe=np.pi*2*5/360  # (radialen)  angle of horizontal pipes in system with horizontal, now 5 degrees 
-r= 3*10**-3 # (meters) radius of inner tube
+r= 20*10**-3 #3*10**-3 (meters) radius of inner tube
 dr1= 7*10**(-3)#7*10**-3  # (meters) thickness of wall of tube for part 1
-dr2= 2*10**-3 # (meters) thickness of wall of tube for part 2
+dr2= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 2
 
 eff=1.5*(10**(-6)) #effective roughness of tube, 
 
@@ -128,7 +128,7 @@ def Reynolds(v,T):
     return abs(re) #re
 
 def Greatz(v):
-    Gz=a_fluid*length/(v*((2*r)**2))
+    Gz=a_fluid*length/(abs(v)*((2*r)**2))
     return Gz
 
 def Prandtl(T):
@@ -152,14 +152,17 @@ def h_fluid(v,T):
     Gz=Greatz(v)
     Pr=Prandtl(T)
     h= 382.7   # hier nog naar kijken wat te doen als geen van deze voldaan worden
-    h= np.zeros(Re.shape)
-    for i in range(np.size(h)):
-        if Re[i]>10**4 and Pr[i]>=0.7:
-            h[i]=0.027*(Re[i]**0.8)*(Pr[i]**0.33)*lambda_fluid/(2*r)
+    #h= np.zeros(Re.shape)
+
+    
+    if True:
+    #for i in range(np.size(h)):
+        if Re>10**4 and Pr>=0.7:
+            h=0.027*(Re**0.8)*(Pr**0.33)*lambda_fluid/(2*r)
         elif Gz<0.05:
-            h[i]=1.62*(1/np.cbrt(Gz))*lambda_fluid/(2*r) #np.cbrt = 3e machtswortel
+            h=1.62*(1/np.cbrt(Gz))*lambda_fluid/(2*r) #np.cbrt = 3e machtswortel
         elif Gz>0.1:
-            h[i]=3.66*lambda_fluid/(2*r)
+            h=3.66*lambda_fluid/(2*r)
     #else:
         #print('error in creation of h_fluid')
         
@@ -173,7 +176,7 @@ def h_BC(n):
     h_BC= ((1/h_wall(n))+(1/h_C))**-1 
     return h_BC
 
-v_steadystate0=0.0315#7.07*10**-13#0.03150#5*10**-5
+v_steadystate0=0.0315#1.0*10**-8#7.07*10**-13#0.03150#5*10**-5
 T_steadystate0=np.zeros(N)
 Tb_steadystate0=np.zeros(N)
 for n in np.arange(0,N,1):
@@ -181,13 +184,13 @@ for n in np.arange(0,N,1):
         T_steadystate0[n]=(70+273.15)
         Tb_steadystate0[n]=(72+273.15)
     elif (n>0.25*N or n==0.25*N) and (n<0.5*N) :
-        T_steadystate0[n]=(50+273.15)
-        Tb_steadystate0[n]=(48+273.15)
+        T_steadystate0[n]=(60+273.15)
+        Tb_steadystate0[n]=(62+273.15)
     elif (n>0.5*N or n==0.5*N) and (n<0.75*N) :
-        T_steadystate0[n]=(55+273.15)
+        T_steadystate0[n]=(59+273.15)
         Tb_steadystate0[n]=(55+273.15)
     elif (n>0.75*N or n==0.75*N) and (n<N) :
-        T_steadystate0[n]=(55+273.15)
+        T_steadystate0[n]=(57+273.15)
         Tb_steadystate0[n]= (55+273.15)
     elif n>N:
         print('error in angle creation')
