@@ -85,7 +85,10 @@ def Tfluidzero(v,T,Tb):
 
 def velocityzero(v,T,Tb):
     f_D=darcyfriction(v, T)/p.N
-    Velocityzero=-2*f_D*(1/p.r)*v**2 - ((p.kw1+p.kw2)*v**2)/p.length + (p.g/(p.rho_0*p.N))*gravity(v,T)
+    if v>0:
+        Velocityzero=-2*f_D*(1/p.r)*v**2 - ((p.kw1+p.kw2)*v**2)/p.length + (p.g/(p.rho_0*p.N))*gravity(v,T)
+    else:
+        Velocityzero=-2*f_D*(1/p.r)*v**2 + ((p.kw1+p.kw2)*v**2)/p.length + (p.g/(p.rho_0*p.N))*gravity(v,T)
     #Velocityzero=-2*f_D*v**2/p.r + (p.g/(p.rho_0*p.N))*gravity(v,T) - ((p.kw1+p.kw2)*v**2)/p.length 
     #f_D=darcyfriction(v, T)
     #Velocityzero=-2*f_D*(1/p.r)*v**2 + (p.g/(p.rho_0))*gravity(v,T)

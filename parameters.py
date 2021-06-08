@@ -22,7 +22,7 @@ C_pwall= 285 # (J/(kg K)) specific heat capacity of wall (taken from Haffmans)
 T_c= 40+273.15   # temperature outside water in Kelvin
 
 'Geometrie' 
-N= 120 #number of segments, has to be multiple of 4
+N= 40 #number of segments, has to be multiple of 4
 length= 4*110.4*10**-3 #length of entire system (each segment is 1/4 length)
 anglepipe=np.pi*2*5/360  # (radialen)  angle of horizontal pipes in system with horizontal, now 5 degrees 
 r= 3*10**-3 #3*10**-3 (meters) radius of inner tube

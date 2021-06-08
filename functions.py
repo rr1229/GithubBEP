@@ -28,7 +28,7 @@ def gammaheating(dr):
 
 def gravity(v,T):
     #grav=0
-    gravitysegment=((1-p.beta*(T-p.T_0))*np.sin(p.angle))
+    gravitysegment=(p.rho_0-p.rho_0*p.beta*(T-p.T_0))*np.sin(p.angle) 
     grav=np.sum(gravitysegment)
     if v>0:
         grav1=grav
@@ -36,7 +36,7 @@ def gravity(v,T):
         grav1=-grav
    # for j in np.arange(0,p.N,1) :
    #     grav=grav+(density(T[j])*np.sin(p.angle[j]))
-    return grav
+    return grav1
 
 def darcyfriction(v,T):
     Re=p.Reynolds(v, T)
@@ -49,12 +49,12 @@ def darcyfriction(v,T):
 "ODE`s"
 #ODE from momentum balance: (dv/dt)
 def f1v(v,T):
-    friction=darcyfriction(abs(v), T)
-    #if v>0:
-    #    f=((-2*friction*v**2)/p.r)-(((p.kw1+p.kw2)*v**2)/p.length)+((p.g/p.N)*gravity(T))
-    #else:
-    #    f=((-2*friction*v**2)/p.r)-(((p.kw1+p.kw2)*v**2)/p.length)+((p.g/p.N)*(-1)*gravity(T))
-    f=(1/(p.tVsys*p.rho_0))*(-(v**2)*np.pi*p.r*p.rho_0*(friction*(p.length/p.N)+p.r*(p.kw1+p.kw2))+np.pi*p.g*(p.length/p.N)*(p.r**2)*gravity(T)) 
+    friction=darcyfriction(abs(v), T)/p.N
+    if v>0:
+        f=((-2*friction*v**2)/p.r)-(((p.kw1+p.kw2)*v**2)/p.length)+((p.g/(p.N*p.rho_0))*gravity(v,T))
+    else:
+        f=((+2*friction*v**2)/p.r)+(((p.kw1+p.kw2)*v**2)/p.length)+((p.g/(p.N*p.rho_0))*(-1)*gravity(v,T))
+    #f=(1/(p.tVsys*p.rho_0))*(-(v**2)*np.pi*p.r*p.rho_0*(friction*(p.length/p.N)+p.r*(p.kw1+p.kw2))+np.pi*p.g*(p.length/p.N)*(p.r**2)*gravity(T)) 
     return f
 
 #ODE from heat balance over fluid: (dTn/dt)
@@ -64,7 +64,7 @@ def f2Tn(v,T,n,Tb):
         phiq=p.h_AB(n,v,T[n])*p.Opp_wallAB*(T[n]-Tb[n])
     elif (n>0.25*p.N and n<0.5*p.N) or n==0.25*p.N:
         #phiq_coef=0 #p.h_AB(n,v,T[n])*p.Opp_wallAB*(T[n]-Tb[n])
-        phiq=0
+        phiq=p.h_AB(n,v,T[n])*p.Opp_wallAB*(T[n]-Tb[n])
         
     if v>0:
         if n>0 and n<p.N:
@@ -105,13 +105,14 @@ def f3Tb(T,n,Tb,v):
         print('error in gammaheating calculation in f3Tb')
     if (n>0 and n<0.25*p.N) or n==0 or (n>0.5*p.N and n<p.N) or n==0.5*p.N:
         #phiq_coef=2*p.h_AB(n, abs(v), T[n])*p.r*(1/(2*p.r*dr+dr**2))*(T[n]-Tb[n])
-        phiq=p.h_AB(n,v,T[n])*p.Opp_wallAB*(T[n]-Tb[n])
+        phiqAB=p.h_AB(n,v,T[n])*p.Opp_wallAB*(T[n]-Tb[n])
     elif (n>0.25*p.N and n<0.5*p.N) or n==0.25*p.N:
         #phiq_coef=0 #2*p.h_AB(n, v, T[n])*p.r*(1/(2*p.r*dr+dr**2))*(T[n]-Tb[n])
-        phiq=p.h_AB(n,v,T[n])*p.Opp_wallAB*(T[n]-Tb[n])    
-          
+        phiqAB=p.h_AB(n,v,T[n])*p.Opp_wallAB*(T[n]-Tb[n])    
+        
+    phiqBC=p.h_BC(n)*p.Opp_wallBC[n]*(Tb[n]-p.T_c)
     #f=(p.u/p.C_pwall)+ (phiq_coef/(p.C_pwall*p.rho_wall))-(2*p.h_BC(n)*(p.r+dr)*(Tb[n]-p.T_c)/(p.C_pwall*p.rho_wall*(2*p.r*dr+dr**2)))
-    f=(1/(p.rho_wall*p.C_pwall*p.Vwall[n]))*(p.h_BC(n)*p.Opp_wallBC[n]*(p.T_c-Tb[n])+phiq+P)   # nog goed checken of dit klopt!!!!
+    f=(1/(p.rho_wall*p.C_pwall*p.Vwall[n]))*(-phiqBC+phiqAB+P)   # nog goed checken of dit klopt!!!!
     return f
     
 

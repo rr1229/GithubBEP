@@ -9,7 +9,7 @@ import parameters as p
 import functions as f
 import matplotlib.pyplot as plt
 from tqdm import tqdm 
-
+plt.close('all')
 def euler(R,h):
     v=R[0]
     T=0
@@ -66,9 +66,9 @@ def rungakutta(R,h):
 initial=[p.v0,p.T0,p.Tb0]
 
 t=0
-h=0.0005
+h=0.5
 hmax=2*h
-steps=500000#400000
+steps=5000#400000
 RK=initial
 
 vend=np.zeros(steps+1)
