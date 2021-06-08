@@ -26,13 +26,17 @@ def gammaheating(dr):
 #   #     grav=grav+(density(T[j])*np.sin(p.angle[j]))
 #    return grav
 
-def gravity(T):
+def gravity(v,T):
     #grav=0
     gravitysegment=((1-p.beta*(T-p.T_0))*np.sin(p.angle))
     grav=np.sum(gravitysegment)
+    if v>0:
+        grav1=grav
+    else:
+        grav1=-grav
    # for j in np.arange(0,p.N,1) :
    #     grav=grav+(density(T[j])*np.sin(p.angle[j]))
-    return abs(grav)
+    return grav
 
 def darcyfriction(v,T):
     Re=p.Reynolds(v, T)

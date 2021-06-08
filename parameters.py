@@ -22,12 +22,12 @@ C_pwall= 285 # (J/(kg K)) specific heat capacity of wall (taken from Haffmans)
 T_c= 40+273.15   # temperature outside water in Kelvin
 
 'Geometrie' 
-N= 4000 #number of segments, has to be multiple of 4
+N= 120 #number of segments, has to be multiple of 4
 length= 4*110.4*10**-3 #length of entire system (each segment is 1/4 length)
 anglepipe=np.pi*2*5/360  # (radialen)  angle of horizontal pipes in system with horizontal, now 5 degrees 
-r= 20*10**-3 #3*10**-3 (meters) radius of inner tube
-dr1= 7*10**(-3)#7*10**-3  # (meters) thickness of wall of tube for part 1
-dr2= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 2
+r= 3*10**-3 #3*10**-3 (meters) radius of inner tube
+dr1= 6*10**(-3)#7*10**-3  # (meters) thickness of wall of tube for part 1
+dr2= 2*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 2
 
 eff=1.5*(10**(-6)) #effective roughness of tube, 
 
@@ -84,7 +84,7 @@ rho_0= 983.23  # (kg/m^3) reference density of fluid in pipe at temperature T_0,
 T_0= 60+273.15 # reference temperature for fluid, now taken at 60 degrees
 beta= 4.57*10**-4  # (K**-1) ORDERGROOTESCHATTING Thermal expansion coefficient of fluid (constant for determining density at different temperature)
 lambda_fluid=0.665 #thermal conductivity of reference fluid, water at 60 degrees
-mu_20=1.002 #dynamic viscosity of reference fluid, water, at 20 degrees
+mu_20=1.002*10**-3 #dynamic viscosity of reference fluid, water, at 20 degrees
 
 lambda_wall=21.5
 
@@ -176,7 +176,7 @@ def h_BC(n):
     h_BC= ((1/h_wall(n))+(1/h_C))**-1 
     return h_BC
 
-v_steadystate0=0.0315#1.0*10**-8#7.07*10**-13#0.03150#5*10**-5
+v_steadystate0=0.00215#1.0*10**-8#7.07*10**-13#0.03150#5*10**-5
 T_steadystate0=np.zeros(N)
 Tb_steadystate0=np.zeros(N)
 for n in np.arange(0,N,1):

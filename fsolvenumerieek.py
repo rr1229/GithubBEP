@@ -9,6 +9,8 @@ import parameters as p
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import optimize
+plt.close('all')
+
 
 def darcyfriction(v,T,Tb=0):
     Re=p.Reynolds(v, T)
@@ -17,7 +19,11 @@ def darcyfriction(v,T,Tb=0):
     #df=64/Re
     df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(6.82*2*p.r/p.eff))**(2*(a-1)*(1-b)))
     f=np.sum(df)
-    return f
+    if v>0:
+        f1=f
+    else:
+        f1=-f
+    return f1
 
 def gravity(v,T):
     grav=np.zeros(p.N)
@@ -78,8 +84,11 @@ def Tfluidzero(v,T,Tb):
     return tfluidzero
 
 def velocityzero(v,T,Tb):
-    f_D=darcyfriction(v, T)
+    f_D=darcyfriction(v, T)/p.N
     Velocityzero=-2*f_D*(1/p.r)*v**2 - ((p.kw1+p.kw2)*v**2)/p.length + (p.g/(p.rho_0*p.N))*gravity(v,T)
+    #Velocityzero=-2*f_D*v**2/p.r + (p.g/(p.rho_0*p.N))*gravity(v,T) - ((p.kw1+p.kw2)*v**2)/p.length 
+    #f_D=darcyfriction(v, T)
+    #Velocityzero=-2*f_D*(1/p.r)*v**2 + (p.g/(p.rho_0))*gravity(v,T)
     return Velocityzero
 
 def system(U):
@@ -113,7 +122,7 @@ v=answer[0]
 T,Tb=np.array_split(answer[1:],2)
 
 
-print('------- \n \n \t v = %.3e \n ------- ' %(v))
+print('- - - - - - - \n \n \t velocity \n \t v = %.3e m/s \n \n mean temperature \n \t first quadrant \t T = %3.f K | Tb = %3.f \n \t second quadrant \t T = %3.f K | Tb = %3.f \n \t third quadrant \t T = %3.f K | Tb = %3.f \n \t fourth quadrant \t T = %3.f K | Tb = %3.f \n - - - - - - -  ' %(v,np.mean(T[0:int(p.N/4)]),np.mean(Tb[0:int(p.N/4)]),np.mean(T[int(p.N/4)+1:int(p.N/2)]),np.mean(Tb[int(p.N/4)+1:int(p.N/2)]),np.mean(T[int(p.N/2)+1:int(p.N*3/4)]),np.mean(Tb[int(p.N/2)+1:int(p.N*3/4)]),np.mean(T[int(p.N*3/4)+1:int(p.N-1)]),np.mean(Tb[int(p.N*3/4)+1:int(p.N-1)])) )
 
 
 
