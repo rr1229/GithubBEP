@@ -168,64 +168,149 @@ for tn in tqdm(np.arange(0,steps,1)):
 plt.plot(tend,vend)    
 
 if True:
+    #'plot of velocity'
     plt.plot(tend,vend) 
     plt.title('velocity of fluid')
     plt.ylabel('v (m/s)')
     plt.xlabel('t (s)')    
     
+    #'plot of points inside cilinder, temperature of fluid'
     fig,((ax1,ax2),(ax3,ax4)) = plt.subplots(2,2)
-    
+
     ax1.plot(tend,Tend[int(p.N/8)])
-    ax1.title.set_text('plot of temperature in cilinder 1')
+    ax1.title.set_text('cilinder 1')
     ax1.set_ylabel('T (k)')
     ax1.set_xlabel('t (s)')
     
     ax2.plot(tend,Tend[int(3*p.N/8)])
-    ax2.title.set_text('plot of temperature in cilinder 2')
+    ax2.title.set_text('cilinder 2')
     ax2.set_ylabel('T (k)')
     ax2.set_xlabel('t (s)')
    
     ax3.plot(tend,Tend[int(5*p.N/8)])
-    ax3.title.set_text('plot of temperature in cilinder 3')
+    ax3.title.set_text('cilinder 3')
     ax3.set_ylabel('T (k)')
     ax3.set_xlabel('t (s)')
     
     ax4.plot(tend,Tend[int(7*p.N/8)])
-    ax4.title.set_text('plot of temperature in cilinder 4')
+    ax4.title.set_text('cilinder 4')
     ax4.set_ylabel('T (k)')
     ax4.set_xlabel('t (s)')
     
-    plt.suptitle('Temperature of fluid')
+    plt.suptitle('Temperature of fluid in middle point of each cilinder') 
     
-    
-    
+    #'plot of points inside cilinder, temperature of wall'
     fig,((bx1,bx2),(bx3,bx4)) = plt.subplots(2,2)
     
     bx1.plot(tend,Tbend[int(p.N/8)])
-    bx1.title.set_text('plot of wall temperature in cilinder 1')
-    bx1.set_ylabel('T (k)')
+    bx1.title.set_text('cilinder 1')
+    bx1.set_ylabel('$T_B (k)$')
     bx1.set_xlabel('t (s)')
     
     bx2.plot(tend,Tbend[int(3*p.N/8)])
-    bx2.title.set_text('plot of wall temperature in cilinder 2')
-    bx2.set_ylabel('T (k)')
+    bx2.title.set_text('cilinder 2')
+    bx2.set_ylabel('$T_B (k)$')
     bx2.set_xlabel('t (s)')
    
     bx3.plot(tend,Tbend[int(5*p.N/8)])
-    bx3.title.set_text('plot of wall temperature in cilinder 3')
-    bx3.set_ylabel('T (k)')
+    bx3.title.set_text('cilinder 3')
+    bx3.set_ylabel('$T_B (k)$')
     bx3.set_xlabel('t (s)')
     
     bx4.plot(tend,Tbend[int(7*p.N/8)])
-    bx4.title.set_text('plot of wall temperature in cilinder 4')
-    bx4.set_ylabel('T (k)')
+    bx4.title.set_text('cilinder 4')
+    bx4.set_ylabel('$T_B (k)$')
     bx4.set_xlabel('t (s)')
     
-    plt.suptitle('Temperature of wall')
+    plt.suptitle('Temperature of wall in middle point of each cilinder')
+    
+    
+    #'plot of mean values inside cilinders, temperature of fluid'
+    fig,((cx1,cx2),(cx3,cx4)) = plt.subplots(2,2)
+    
+    TendC1=np.zeros(int(steps+1))
+    TendC2=np.zeros(int(steps+1))
+    TendC3=np.zeros(int(steps+1))
+    TendC4=np.zeros(int(steps+1))
+    for i in np.arange(0,steps+1,1):
+        TendC1[i]=np.mean((Tend[:,i])[0:int(p.N/4)])
+        TendC2[i]=np.mean((Tend[:,i])[int(p.N/4):int(p.N/2)])
+        TendC3[i]=np.mean((Tend[:,i])[int(p.N/2):int(3*p.N/4)])
+        TendC4[i]=np.mean((Tend[:,i])[int(3*p.N/4):int(p.N-1)])
+
+        
+    cx1.plot(TendC1)
+    cx1.title.set_text('cilinder 1')
+    cx1.set_ylabel('T (k)')
+    cx1.set_xlabel('t (s)')
+    
+    cx2.plot(TendC2)
+    cx2.title.set_text('cilinder 2')
+    cx2.set_ylabel('T (k)')
+    cx2.set_xlabel('t (s)')
+
+    cx3.plot(TendC3)
+    cx3.title.set_text('cilinder 3')
+    cx3.set_ylabel('T (k)')
+    cx3.set_xlabel('t (s)')
+    
+    cx4.plot(TendC4)
+    cx4.title.set_text('cilinder 4')
+    cx4.set_ylabel('T (k)')
+    cx4.set_xlabel('t (s)')
+    
+    plt.suptitle('plots of mean Temperatures of fluid in different cilinders')   
+    
+    
+    #'plot of mean values inside cilinders, temperature of wall'    
+    fig,((dx1,dx2),(dx3,dx4)) = plt.subplots(2,2)
+    
+    TbendC1=np.zeros(int(steps+1))
+    TbendC2=np.zeros(int(steps+1))
+    TbendC3=np.zeros(int(steps+1))
+    TbendC4=np.zeros(int(steps+1))
+    for i in np.arange(0,steps+1,1):
+        TbendC1[i]=np.mean((Tbend[:,i])[0:int(p.N/4)])
+        TbendC2[i]=np.mean((Tbend[:,i])[int(p.N/4):int(p.N/2)])
+        TbendC3[i]=np.mean((Tbend[:,i])[int(p.N/2):int(3*p.N/4)])
+        TbendC4[i]=np.mean((Tbend[:,i])[int(3*p.N/4):int(p.N-1)])
+    
+    dx1.plot(tend,TbendC1)
+    dx1.title.set_text('cilinder 1')
+    dx1.set_ylabel('$T_B (k)$')
+    dx1.set_xlabel('t (s)')
+    
+    dx2.plot(tend,TbendC2)
+    dx2.title.set_text('cilinder 2')
+    dx2.set_ylabel('$T_B (k)$')
+    dx2.set_xlabel('t (s)')
+   
+    dx3.plot(tend,TbendC3)
+    dx3.title.set_text('cilinder 3')
+    dx3.set_ylabel('$T_B (k)$')
+    dx3.set_xlabel('t (s)')
+    
+    dx4.plot(tend,TbendC4)
+    dx4.title.set_text('cilinder 4')
+    dx4.set_ylabel('$T_B (k)$')
+    dx4.set_xlabel('t (s)')
+    
+    plt.suptitle(' plots of mean Temperatures of wall in different cilinders') 
     
     
     
-    
+    #plot of end temperature of wall and fluid
+    fig,((ex1,ex2)) = plt.subplots(1,2)
+    plt.suptitle('End result of Runga kutta method, v= %.3e' %(vend[steps-1]))
+    ex1.plot(Tend[:,steps-1])
+    ex1.set_title('Temperature of fluid')
+    ex1.set_ylabel('$T$')
+    ex1.set_xlabel('$l$')
+
+    ex2.plot(Tbend[:,steps-1])
+    ex2.set_title('Temperature of wall')
+    ex2.set_ylabel('$T_B$')
+    ex2.set_xlabel('$l$')
     
     
     

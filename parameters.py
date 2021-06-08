@@ -176,7 +176,7 @@ def h_BC(n):
     h_BC= ((1/h_wall(n))+(1/h_C))**-1 
     return h_BC
 
-v_steadystate0=0.00215#1.0*10**-8#7.07*10**-13#0.03150#5*10**-5
+v_steadystate0=0.00115#1.0*10**-8#7.07*10**-13#0.03150#5*10**-5
 T_steadystate0=np.zeros(N)
 Tb_steadystate0=np.zeros(N)
 for n in np.arange(0,N,1):
