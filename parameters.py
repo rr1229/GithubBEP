@@ -28,7 +28,7 @@ anglepipe=np.pi*2*5/360  # (radialen)  angle of horizontal pipes in system with 
 r= 3*10**-3 #3*10**-3 (meters) radius of inner tube
 dr1= 7*10**(-3)#7*10**-3  # (meters) thickness of wall of tube for part 1
 dr2= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 2
-deel=0.3 #where in the tube the smaller diameter will appear
+deel=0.5 #where in the tube the smaller diameter will appear
 dr=np.zeros(N)
 for i in np.arange(0,N,1):
     if i<0.25*N:

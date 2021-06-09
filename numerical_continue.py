@@ -7,14 +7,35 @@ Created on Sat May 15 16:23:30 2021
 import parameters as p
 import numpy as np
 import matplotlib.pyplot as plt
-import fsolvenumerieekNieuw as fs
+#import fsolvenumerieekNieuw as fs
 
 blocks=p.N #number of parts we use for numerical integration, would work best in multiples of 4
 
 #initial condition of Temperature:
-vo=fs.answer[0]
-To,Tbo=np.array_split(fs.answer[1:],2)
+#vo=fs.answer[0]
+#To,Tbo=np.array_split(fs.answer[1:],2)
+vo=0.0010461944706357197
+To=np.array([325.10297393, 325.14567897, 325.18621626, 325.22469582,
+       325.26122209, 325.29589421, 325.32880629, 325.36004766,
+       325.38970312, 325.41785317, 326.388868  , 327.31859889,
+       328.20878404, 329.06109018, 329.87711519, 330.65839084,
+       331.40638538, 332.12250607, 332.80810163, 333.46446455,
+       332.61074395, 331.79916799, 331.02759573, 330.29399865,
+       329.5964546 , 328.93314206, 328.30233466, 327.70239603,
+       327.131775  , 326.58900095, 326.41285568, 326.24228654,
+       326.07711264, 325.91715904, 325.76225671, 325.61224231,
+       325.466958  , 325.3262512 , 325.18997447, 325.05798528])
 
+Tbo=np.array([325.85214267, 325.85681948, 325.86125857, 325.86547205,
+       325.8694714 , 325.8732675 , 325.8768707 , 325.8802908 ,
+       325.88353712, 325.8866185 , 342.558573  , 342.80082607,
+       343.032481  , 343.25401174, 343.46586999, 343.66848637,
+       343.86227151, 344.04761707, 344.22489665, 344.39446675,
+       319.7886221 , 319.6100216 , 319.439269  , 319.27602511,
+       319.1199654 , 318.97077937, 318.82816987, 318.69185258,
+       318.56155538, 318.43701784, 323.76730879, 323.68049039,
+       323.59634803, 323.51479868, 323.43576193, 323.35915991,
+       323.28491716, 323.21296063, 323.14321953, 323.07562532])
 
 def h_BC(n,v,T,Tb,m):
     h_BC= ((1/p.h_wall(n))+(1/p.h_outside(n, v, T, Tb,m)))**-1 
@@ -67,7 +88,7 @@ def darcyfriction(v,T):
     return f
         
 def constantA(n,T,v,l):
-    ans1=Ch_BC(n,l)*p.h_AB(n, v, T)*2*(p.r+drwall(n))
+    ans1=-Ch_BC(n,l)*p.h_AB(n, v, T)*2*(p.r+drwall(n))
     ans2=v * p.r * p.rho_0 * p.C_pfluid * (p.h_AB(n, v, T)*p.r + Ch_BC(n,l)*(p.r+drwall(n)))
     An=ans1/ans2
     #An=(p.h_AB(n,v,T)*p.h_BC(n)*4*np.pi*((p.r**2)+p.r*drwall(n)))/(p.h_BC(n)*2*np.pi*(p.r+drwall(n))+p.h_AB(n,v,T)*2*np.pi*p.r)
@@ -108,10 +129,10 @@ def T_l(l,v,Told):
     B4=constantB(round(p.N*0.90),Told[round(p.N*0.90)],v,l)
     
 
-    F1=A1/B1
-    F2=A2/B2
-    F3=A3/B3
-    F4=A4/B4
+    F1=B1/A1 #A1/B1
+    F2=B2/A2#A2/B2
+    F3=B3/A3#A3/B3
+    F4=B4/A4#A4/B4
     
     #lengtes definieren op verschillende punten  in de buis (randvoorwaarden op hoeken)
     l1=0.25*p.length
@@ -120,16 +141,16 @@ def T_l(l,v,Told):
     l4=p.length
     
     #Constantes bepalen in vergelijking wat volgt uit de ODE en randvoorwaarden
-    ans1=(1-np.e**((v**-1)*(A4*l4+A1*l1-A2*l1+A2*l2-A3*l2+A3*l3-A4*l3)))**-1
-    ans2=(F4-F3)*(np.e**((v**-1)*(-A4*l3)))
-    +(F3-F2)*np.e**((v**-1)*(-A3*l2+A3*l3-A4*l3))
-    +(F2-F1)*np.e**((v**-1)*(-A2*l1+A2*l2-A3*l2+A3*l3-A4*l3))
-    +(F1-F4)*np.e**((v**-1)*(A1*l1-A2*l1+A2*l2-A3*l2+A3*l3-A4*l3))
-    
-    constant4=(ans1*ans2)   
-    constant1=F1-F4+constant4*np.e**(A4*l4/v)
-    constant2=(F2-F1+constant1*np.e**(A1*l1/v))*np.e**(-A2*l1/v)   
-    constant3=(F3-F2+constant2*np.e**(A2*l2/v))*np.e**(-A3*l2/v)   
+    ans1=(1-np.e**((-A4*l4-A1*l1+A2*l1-A2*l2+A3*l2-A3*l3+A4*l3)))**-1
+    ans2=(F1-F2)*(np.e**((-A1*l1)))
+    +(F2-F3)*np.e**((-A2*l2+A2*l1-A1*l1))
+    +(F3-F4)*np.e**((-A3*l3+A3*l2-A2*l2+A2*l1-A1*l1))
+    +(F4-F1)*np.e**((-A4*l4+A4*l3-A3*l3+A3*l2-A2*l2+A2*l1-A1*l1))
+
+    constant1=(ans1*ans2)   
+    constant4=(-F1+F4+constant1)*np.e**(-A4*l4)
+    constant3=(-F4+F3+constant4*np.e**(A4*l3))*np.e**(-A3*l3)   
+    constant2=(-F3+F2+constant3*np.e**(A3*l2))*np.e**(-A2*l2)   
     
     #Bepalen in welk deel van de buis we zitten, dus welke constantes we moeten hebben
     if l<0.25*p.length:
