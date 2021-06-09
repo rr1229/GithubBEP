@@ -27,14 +27,15 @@ length= 4*110.4*10**-3 #length of entire system (each segment is 1/4 length)
 anglepipe=np.pi*2*5/360  # (radialen)  angle of horizontal pipes in system with horizontal, now 5 degrees 
 r= 3*10**-3 #3*10**-3 (meters) radius of inner tube
 dr1= 7*10**(-3)#7*10**-3  # (meters) thickness of wall of tube for part 1
-dr2= 2*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 2
+dr2= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 2
+deel=0.3 #where in the tube the smaller diameter will appear
 dr=np.zeros(N)
 for i in np.arange(0,N,1):
     if i<0.25*N:
         dr[i]=dr1
-    elif (i>0.25*N or i==0.25*N) and (i<0.5*N) :
+    elif (i>0.25*N or i==0.25*N) and (i<deel*N) :
         dr[i]=dr1
-    elif (i>0.5*N or i==0.5*N) and (i<0.75*N) :
+    elif (i>deel*N or i==deel*N) and (i<0.75*N) :
         dr[i]=dr2
     elif (i>0.75*N or i==0.75*N) and (i<N) :
         dr[i]=dr2
@@ -43,12 +44,8 @@ for i in np.arange(0,N,1):
 eff=1.5*(10**(-6)) #effective roughness of tube, 
 
 tVsys= length*np.pi*r**2 #volume of whole system within the pipe
-Vsys_segm=(length/N)*np.pi*r**2
-Vwallsegm1=(length/N)*np.pi*((r+dr1)**2-r**2) # volume of wall of segment of system in part 1
-Vwallsegm2=(length/N)*np.pi*((r+dr2)**2-r**2) # volume of wall of segment of system in part 2
+Vsys_segm=(length/N)*np.pi*r**2 # volume of segment within the pipe
 Opp_wallAB=(length/N)*r*2*np.pi # area of inner wall of segment of system
-Opp_wallBC1=(length/N)*2*np.pi*((r+dr1)) #area of outer wall of segment of system
-Opp_wallBC2=(length/N)*2*np.pi*((r+dr2)) #area of outer wall of segment of system
 
 kw1=1.30   # pressure loss term for bend 1, for now a schatting from a sharp bend
 kw2=1.30   # pressure loss term for bend 2, for now a schatting from a sharp bend
@@ -67,27 +64,14 @@ for i in np.arange(0,N,1):
     elif i>N:
         print('error in angle creation')
         
-Opp_wallBC=np.zeros(N)
+Opp_wallBC=np.zeros(N)  #area of outer wall of segment of system
 for i in np.arange(0,N,1):
-    if i<0.25*N:
-        Opp_wallBC[i]=Opp_wallBC1
-    elif (i>0.25*N or i==0.25*N) and (i<0.5*N):
-        Opp_wallBC[i]=Opp_wallBC1
-    elif (i>0.5*N or i==0.5*N):
-        Opp_wallBC[i]=Opp_wallBC2        
-    elif i>N:
-        print('error in Opp_wallBC creation')
+    Opp_wallBC[i]=(length/N)*2*np.pi*(r+dr[i])    
+
         
 Vwall=np.zeros(N)
-for i in np.arange(0,N,1):
-    if i<0.25*N:
-        Vwall[i]=Vwallsegm1
-    elif (i>0.25*N or i==0.25*N) and (i<0.5*N):
-        Vwall[i]=Vwallsegm1
-    elif (i>0.5*N or i==0.5*N):
-        Vwall[i]=Vwallsegm2
-    elif i>N:
-        print('error in Vwall creation')
+for i in np.arange(0,N,1):# volume of wall of segment of system 
+    Vwall[i]=(length/N)*np.pi*((r+dr[i])**2-r**2)
 
 
 'material properties'
@@ -162,13 +146,13 @@ def Grashof(n,Tb):
 
 def h_wall(n):
     if n<0.25*N:
-        d=dr1
-    elif (n>0.25*N or n==0.25*N) and (n<0.5*N) :
-        d=dr1
-    elif (n>0.5*N or n==0.5*N) and (n<0.75*N) :
-        d=dr2
+        d=dr[n]
+    elif (n>0.25*N or n==0.25*N) and (n<deel*N) :
+        d=dr[n]
+    elif (n>deel*N or n==deel*N) and (n<0.75*N) :
+        d=dr[n]
     elif (n>0.75*N or n==0.75*N) and (n<N) :
-        d=dr2
+        d=dr[n]
     h=lambda_wall/d
     return h
 
@@ -261,10 +245,10 @@ for n in np.arange(0,N,1):
     if n<0.25*N:
         T_steadystate0[n]=(55+273.15)
         Tb_steadystate0[n]=(60+273.15)
-    elif (n>0.25*N or n==0.25*N) and (n<0.5*N) :
+    elif (n>0.25*N or n==0.25*N) and (n<deel*N) :
         T_steadystate0[n]=(58+273.15)
         Tb_steadystate0[n]=(60+273.15)
-    elif (n>0.5*N or n==0.5*N) and (n<0.75*N) :
+    elif (n>deel*N or n==deel*N) and (n<0.75*N) :
         T_steadystate0[n]=(57+273.15)
         Tb_steadystate0[n]=(52+273.15)
     elif (n>0.75*N or n==0.75*N) and (n<N) :

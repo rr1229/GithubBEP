@@ -59,10 +59,10 @@ def f1v(v,T):
 
 #ODE from heat balance over fluid: (dTn/dt)
 def f2Tn(v,T,n,Tb):
-    if (n>0 and n<0.25*p.N) or n==0 or (n>0.5*p.N and n<p.N) or n==0.5*p.N:
+    if (n>0 and n<0.25*p.N) or n==0 or (n>p.deel*p.N and n<p.N) or n==p.deel*p.N:
         #phiq_coef=2*p.h_AB(n,abs(v),T[n])*(1/(p.r*p.rho_0*p.C_pfluid))*(T[n]-Tb[n])
         phiq=p.h_AB(n,v,T[n])*p.Opp_wallAB*(T[n]-Tb[n])
-    elif (n>0.25*p.N and n<0.5*p.N) or n==0.25*p.N:
+    elif (n>0.25*p.N and p.deel*p.N) or n==0.25*p.N:
         #phiq_coef=0 #p.h_AB(n,v,T[n])*p.Opp_wallAB*(T[n]-Tb[n])
         phiq=p.h_AB(n,v,T[n])*p.Opp_wallAB*(T[n]-Tb[n])
         
@@ -90,15 +90,15 @@ def f3Tb(T,n,Tb,v):
     
     if n<0.25*p.N:
         #dr=p.dr1
-        P=gammaheating(p.dr1)
-    elif (n>0.25*p.N or n==0.25*p.N) and (n<0.5*p.N) :
-        P=gammaheating(p.dr1)
+        P=gammaheating(p.dr[n])
+    elif (n>0.25*p.N or n==0.25*p.N) and (n<p.deel*p.N) :
+        P=gammaheating(p.dr[n])
         #dr=p.dr1
-    elif (n>0.5*p.N or n==0.5*p.N) and (n<0.75*p.N) :
-        P=gammaheating(p.dr2)
+    elif (n>p.deel*p.N or n==p.deel*p.N) and (n<0.75*p.N) :
+        P=gammaheating(p.dr[n])
         #dr=p.dr2
     elif (n>0.75*p.N or n==0.75*p.N) and (n<p.N) :
-        P=gammaheating(p.dr2)
+        P=gammaheating(p.dr[n])
         #dr=p.dr1
     elif n>p.N:
         

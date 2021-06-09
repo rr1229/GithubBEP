@@ -46,13 +46,13 @@ def Ch_BC(n,l):
 
 def drwall(i):
     if i<0.25*p.N:
-        dr_wall=p.dr1
-    elif (i>0.25*p.N or i==0.25*p.N) and (i<0.5*p.N) :
-        dr_wall=p.dr1
-    elif (i>0.5*p.N or i==0.5*p.N) and (i<0.75*p.N) :
-        dr_wall=p.dr2
+        dr_wall=p.dr[i]
+    elif (i>0.25*p.N or i==0.25*p.N) and (i<p.deel*p.N) :
+        dr_wall=p.dr[i]
+    elif (i>p.deel*p.N or i==p.deel*p.N) and (i<0.75*p.N) :
+        dr_wall=p.dr[i]
     elif (i>0.75*p.N or i==0.75*p.N) and (i<p.N) :
-        dr_wall=p.dr2
+        dr_wall=p.dr[i]
     elif i>p.N:
         print('error in dr_wall')
         
@@ -97,13 +97,13 @@ def constantC(n,v,T):
 
 def T_l(l,v,Told):
     #constantes defenieren van de vergelijking voor de temperatuur
-
+    deel2=((p.deel-0.25)/2)+0.25
     A1=constantA(round(p.N*0.10),Told[round(p.N*0.10)],v,l)
-    A2=constantA(round(p.N*0.40),Told[round(p.N*0.40)],v,l)
+    A2=constantA(round(p.N*deel2),Told[round(p.N*deel2)],v,l)
     A3=constantA(round(p.N*0.60),Told[round(p.N*0.60)],v,l)
     A4=constantA(round(p.N*0.90),Told[round(p.N*0.90)],v,l)
     B1=constantB(round(p.N*0.10),Told[round(p.N*0.10)],v,l)
-    B2=constantB(round(p.N*0.40),Told[round(p.N*0.40)],v,l)
+    B2=constantB(round(p.N*deel2),Told[round(p.N*deel2)],v,l)
     B3=constantB(round(p.N*0.60),Told[round(p.N*0.60)],v,l)
     B4=constantB(round(p.N*0.90),Told[round(p.N*0.90)],v,l)
     
@@ -115,7 +115,7 @@ def T_l(l,v,Told):
     
     #lengtes definieren op verschillende punten  in de buis (randvoorwaarden op hoeken)
     l1=0.25*p.length
-    l2=0.5*p.length
+    l2=p.deel*p.length
     l3=0.75*p.length
     l4=p.length
     
@@ -135,11 +135,11 @@ def T_l(l,v,Told):
     if l<0.25*p.length:
         n=round(p.N*0.10)
         constantn=constant1
-    elif (l>0.25*p.length or l==0.25*p.length) and (l<0.5*p.length) :
+    elif (l>0.25*p.length or l==0.25*p.length) and (l<p.deel*p.length) :
         n=round(p.N*0.40)
         constantn=constant2
-    elif (l>0.5*p.length or l==0.5*p.length) and (l<0.75*p.length) :
-        n=round(p.N*0.60)
+    elif (l>p.deel*p.length or l==p.deel*p.length) and (l<0.75*p.length) :
+        n=round(p.N*deel2)
         constantn=constant3
     elif (l>0.75*p.length or l==0.75*p.length) and (l<p.length) :
         n=round(p.N*0.90)
@@ -156,15 +156,16 @@ def T_l(l,v,Told):
 
 def velocity(v_i,Told):
     #constantes bereken in de vergelijking voor de snelheid
+    deel2=((p.deel-0.25)/2)+0.25
     C1=constantC(round(p.N*0.10),v_i,Told)
-    C2=constantC(round(p.N*0.40),v_i,Told)
+    C2=constantC(round(p.N*deel2),v_i,Told)
     C3=constantC(round(p.N*0.60),v_i,Told)
     C4=constantC(round(p.N*0.90),v_i,Told)
     
     #lengtes definieren in buis in elke deel van de buis
     values1=np.linspace(0,0.25*p.length-(0.25*p.length/25),round(blocks*0.25))
-    values2=np.linspace(0.25*p.length,0.5*p.length-(0.25*p.length/25),round(blocks*0.25))
-    values3=np.linspace(0.5*p.length,0.75*p.length-(0.25*p.length/25),round(blocks*0.25))
+    values2=np.linspace(0.25*p.length,p.deel*p.length-(0.25*p.length/25),round(blocks*0.25))
+    values3=np.linspace(p.deel*p.length,0.75*p.length-(0.25*p.length/25),round(blocks*0.25))
     values4=np.linspace(0.75*p.length,p.length-(0.25*p.length/25),round(blocks*0.25))
     
     #Lege vectoren maken voor het berekenen voor elke Temperatuur in de verschillende delen 
@@ -220,13 +221,14 @@ def velocity(v_i,Told):
 #        print('error in T_0 creation')
 T_0=To
 #berekenen van initial snelheid aan de hand van the initial condition van de temperature. 
+deel2=((p.deel-0.25)/2)+0.25
 C1=constantC(round(p.N*0.10),0.03,T_0) #!!!!!!!!!! hier nog even naar de velocity kijken 
-C2=constantC(round(p.N*0.40),0.03,T_0)
+C2=constantC(round(p.N*deel2),0.03,T_0)
 C3=constantC(round(p.N*0.60),0.03,T_0)
 C4=constantC(round(p.N*0.90),0.03,T_0)
 ans1=C1*sum(T_0[round(0):round(0.25*blocks)])*(p.length/blocks)
-ans2=C2*sum(T_0[round(0.25*blocks):round(0.5*blocks)])*(p.length/blocks)
-ans3=C3*sum(T_0[round(0.5*blocks):round(0.75*blocks)])*(p.length/blocks)
+ans2=C2*sum(T_0[round(0.25*blocks):round(p.deel*blocks)])*(p.length/blocks)
+ans3=C3*sum(T_0[round(p.deel*blocks):round(0.75*blocks)])*(p.length/blocks)
 ans4=C4*sum(T_0[round(0.75*blocks):round(blocks)])*(p.length/blocks)
 v_0=np.sqrt(abs(ans1+ans2+ans3+ans4))
 
