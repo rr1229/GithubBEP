@@ -110,7 +110,7 @@ def f3Tb(T,n,Tb,v):
         #phiq_coef=0 #2*p.h_AB(n, v, T[n])*p.r*(1/(2*p.r*dr+dr**2))*(T[n]-Tb[n])
         phiqAB=p.h_AB(n,v,T[n])*p.Opp_wallAB*(T[n]-Tb[n])    
         
-    phiqBC=p.h_BC(n)*p.Opp_wallBC[n]*(Tb[n]-p.T_c)
+    phiqBC=p.h_BC(n, v, T, Tb)*p.Opp_wallBC[n]*(Tb[n]-p.T_c)
     #f=(p.u/p.C_pwall)+ (phiq_coef/(p.C_pwall*p.rho_wall))-(2*p.h_BC(n)*(p.r+dr)*(Tb[n]-p.T_c)/(p.C_pwall*p.rho_wall*(2*p.r*dr+dr**2)))
     f=(1/(p.rho_wall*p.C_pwall*p.Vwall[n]))*(-phiqBC+phiqAB+P)   # nog goed checken of dit klopt!!!!
     return f

@@ -49,7 +49,7 @@ def phiBC(v,T,Tb):
     phi=np.zeros(p.N)
 
     for n in np.arange(0,p.N,1):
-        phi[n]=p.h_BC(n)*p.Opp_wallBC[n]*(Tb[n]-p.T_c)
+        phi[n]=p.h_BC(n,v,T,Tb)*p.Opp_wallBC[n]*(Tb[n]-p.T_c)
     return phi
 
 def Twallzero(v,T,Tb):
