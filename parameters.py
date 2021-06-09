@@ -22,7 +22,7 @@ C_pwall= 285 # (J/(kg K)) specific heat capacity of wall (taken from Haffmans)
 T_c= 40+273.15   # temperature outside water in Kelvin
 
 'Geometrie' 
-N= 80 #number of segments, has to be multiple of 4
+N= 100 #number of segments, has to be multiple of 4
 length= 4*110.4*10**-3 #length of entire system (each segment is 1/4 length)
 anglepipe=np.pi*2*5/360  # (radialen)  angle of horizontal pipes in system with horizontal, now 5 degrees 
 r= 8*10**-3 #3*10**-3 (meters) radius of inner tube
@@ -196,9 +196,9 @@ def h_fluid(v,T):
         
     return h
 
-def h_outside(n,v,T,Tb):
+def h_outside(n,v,T,Tb,m):
     #Re=Reynolds(v, T[n])
-    Gr=Grashof(n,Tb)
+    Gr=Grashof(m,Tb)
     Pr=nu_water/a_water
     Ra=Gr*Pr
     if N/4<=n<N/2 or 3*N/4<=n<N: #vertical pipe
@@ -206,10 +206,10 @@ def h_outside(n,v,T,Tb):
         Nu_ans2=(4/35)* ((272+315*Pr)/(64+63*Pr))*(length/(4*2*(r+dr[n])))
         Nu=Nu_ans1+Nu_ans2
         
-        if Gr<10**8 and Ra>10**4 and Ra<10**9:#Nureth Lin Xiana, b, Guangming Jianga, b, Hongxing Yua, b
-            Nu=0.48*Ra**0.25
+        if Gr<10**8 and Ra>10**4 and Ra<10**9: #:#Nureth Lin Xiana, b, Guangming Jianga, b, Hongxing Yua, b
+            Nu=0.48*Ra**0.25 #!!!!!!!!!!!!!hier nog even goed naar kijken!!!
         
-        elif Gr>4*10**9 and Ra<10**11 and Ra>10**10:
+        elif Gr>4*10**9 and Ra<10**11 and Ra>10**10:# :
             Nu=0.148*Ra**0.333
             
             #print('value Gr is smaller than 10^8, so falls in wrong regime Gr= %.3e' %(Gr))
@@ -234,7 +234,7 @@ def h_AB(n,v,T):
     return h_AB
 
 def h_BC(n,v,T,Tb):
-    h_BC= ((1/h_wall(n))+(1/h_outside(n, v, T, Tb)))**-1 
+    h_BC= ((1/h_wall(n))+(1/h_outside(n, v, T, Tb, n)))**-1 
     return h_BC
 
 v_steadystate0=0.00115#1.0*10**-8#7.07*10**-13#0.03150#5*10**-5

@@ -7,11 +7,37 @@ Created on Sat May 15 16:23:30 2021
 import parameters as p
 import numpy as np
 import matplotlib.pyplot as plt
+import fsolvenumerieekNieuw as fs
 
-blocks=100 #number of parts we use for numerical integration, would work best in multiples of 4
+blocks=p.N #number of parts we use for numerical integration, would work best in multiples of 4
 
 #initial condition of Temperature:
+vo=fs.answer[0]
+To,Tbo=np.array_split(fs.answer[1:],2)
 
+
+def h_BC(n,v,T,Tb,m):
+    h_BC= ((1/p.h_wall(n))+(1/p.h_outside(n, v, T, Tb,m)))**-1 
+    return h_BC
+
+def Ch_BC(n,l):
+    hbc=np.zeros(p.N)
+    for i in np.arange(0,p.N,1):
+        hbc[i]=h_BC(n, vo, To, Tbo, i)
+        
+    if l >= 0 and l<p.length/4:
+        hbcC1=np.mean(hbc[0:int(p.N/4)])
+    elif l >= p.length/4 and l<p.length/2:
+        hbcC1=np.mean(hbc[int(p.N/4):int(p.N/2)])
+    elif l >= p.length/2 and l<3*p.length/4:
+        hbcC1=np.mean(hbc[int(p.N/2):int(3*p.N/4)])
+    elif l >= 3*p.length/4 and l<p.length:
+        hbcC1=np.mean(hbc[int(3*p.N/4):int(p.N-1)])   
+    return hbcC1
+        
+        
+        
+        
 
 def drwall(i):
     if i<0.25*p.N:
@@ -35,17 +61,17 @@ def darcyfriction(v,T):
     f=np.sum(df)
     return f
         
-def constantA(n,T,v):
-    ans1=p.h_BC(n)*p.h_AB(n, v, T)*2*(p.r+drwall(n))
-    ans2=v * p.r * p.rho_0 * p.C_pfluid * (p.h_AB(n, v, T)*p.r + p.h_BC(n)*(p.r+drwall(n)))
+def constantA(n,T,v,l):
+    ans1=Ch_BC(n,l)*p.h_AB(n, v, T)*2*(p.r+drwall(n))
+    ans2=v * p.r * p.rho_0 * p.C_pfluid * (p.h_AB(n, v, T)*p.r + Ch_BC(n,l)*(p.r+drwall(n)))
     An=ans1/ans2
     #An=(p.h_AB(n,v,T)*p.h_BC(n)*4*np.pi*((p.r**2)+p.r*drwall(n)))/(p.h_BC(n)*2*np.pi*(p.r+drwall(n))+p.h_AB(n,v,T)*2*np.pi*p.r)
     return An
 
-def constantB(n,T,v):
+def constantB(n,T,v,l):
     ans1=p.h_AB(n, v, T)*drwall(n)*(2*p.r+drwall(n))*p.u*p.rho_wall
-    ans2=2*p.h_AB(n, v, T)*p.h_BC(n)*(p.r+drwall(n))*p.T_c
-    ans3=v * p.r * p.rho_0 * p.C_pfluid * (p.h_AB(n, v, T)*p.r + p.h_BC(n)*(p.r+drwall(n))) 
+    ans2=2*p.h_AB(n, v, T)*Ch_BC(n,l)*(p.r+drwall(n))*p.T_c
+    ans3=v * p.r * p.rho_0 * p.C_pfluid * (p.h_AB(n, v, T)*p.r + Ch_BC(n,l)*(p.r+drwall(n))) 
     Bn=(ans1+ans2)/ans3
     #ans1=(np.pi*p.C_pfluid*p.rho_0*p.r**2)**-1
     #ans2=((-2*p.rho_wall*p.mu_20*(np.pi**2)*p.h_AB(n,v,T)*((2*drwall(n)*p.r**2)+p.r*drwall(n)**2))
@@ -66,14 +92,14 @@ def constantC(n,v,T):
 
 def T_l(l,v,Told):
     #constantes defenieren van de vergelijking voor de temperatuur
-    A1=constantA(round(p.N*0.10),Told[round(p.N*0.10)],v)
-    A2=constantA(round(p.N*0.40),Told[round(p.N*0.40)],v)
-    A3=constantA(round(p.N*0.60),Told[round(p.N*0.60)],v)
-    A4=constantA(round(p.N*0.90),Told[round(p.N*0.90)],v)
-    B1=constantB(round(p.N*0.10),Told[round(p.N*0.10)],v)
-    B2=constantB(round(p.N*0.40),Told[round(p.N*0.40)],v)
-    B3=constantB(round(p.N*0.60),Told[round(p.N*0.60)],v)
-    B4=constantB(round(p.N*0.90),Told[round(p.N*0.90)],v)
+    A1=constantA(round(p.N*0.10),Told[round(p.N*0.10)],v,l)
+    A2=constantA(round(p.N*0.40),Told[round(p.N*0.40)],v,l)
+    A3=constantA(round(p.N*0.60),Told[round(p.N*0.60)],v,l)
+    A4=constantA(round(p.N*0.90),Told[round(p.N*0.90)],v,l)
+    B1=constantB(round(p.N*0.10),Told[round(p.N*0.10)],v,l)
+    B2=constantB(round(p.N*0.40),Told[round(p.N*0.40)],v,l)
+    B3=constantB(round(p.N*0.60),Told[round(p.N*0.60)],v,l)
+    B4=constantB(round(p.N*0.90),Told[round(p.N*0.90)],v,l)
     F1=A1/B1
     F2=A2/B2
     F3=A3/B3
@@ -114,8 +140,8 @@ def T_l(l,v,Told):
         print('error in dr_wall')
         
     #het in elkaar zetten van de vergelijking voor de Temperatuur.
-    B=constantB(n,Told[n],v)
-    A=constantA(n,Told[n],v)
+    B=constantB(n,Told[n],v,l)
+    A=constantA(n,Told[n],v,l)
     T_l=-B/A+constantn*np.e**(A*l)
     
     return T_l

@@ -183,6 +183,16 @@ if True:
     ax3.set_ylabel('$Prandtl$')
     ax3.set_xlabel('l')
     ax3.set_title('$\phi_{BC}$')
+    
+    fig, (gx1)=plt.subplots(1,1)
+    h_c=np.zeros(p.N)
+    for i in np.arange(0,p.N,1):
+        h_c[i]=p.h_outside(i,v,T,Tb,i)
+        
+    gx1.plot(h_c,'k')
+    gx1.set_ylabel('$h_C$')
+    gx1.set_xlabel('$l$')
+    gx1.set_title('Heat transfer coefficient of surrounding water')
 
     fig, (ax1,ax2) = plt.subplots(1,2)
     ax1.plot(velocityzero(v,T,Tb))
