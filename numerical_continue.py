@@ -31,9 +31,14 @@ def Ch_BC(n,l):
         hbcC1=np.mean(hbc[int(p.N/4):int(p.N/2)])
     elif l >= p.length/2 and l<3*p.length/4:
         hbcC1=np.mean(hbc[int(p.N/2):int(3*p.N/4)])
-    elif l >= 3*p.length/4 and l<p.length:
-        hbcC1=np.mean(hbc[int(3*p.N/4):int(p.N-1)])   
-    return hbcC1
+    elif l >= 3*p.length/4 and l<=p.length:
+        hbcC1=np.mean(hbc[int(3*p.N/4):int(p.N-1)])  
+    if l<p.length:
+        hbcC2=h_BC(n,vo,To,Tbo,int(l*p.N/p.length))
+    else:
+        hbcC2=h_BC(n,vo,To,Tbo,int(p.N-1))
+    
+    return hbcC2
         
         
         
@@ -92,6 +97,7 @@ def constantC(n,v,T):
 
 def T_l(l,v,Told):
     #constantes defenieren van de vergelijking voor de temperatuur
+
     A1=constantA(round(p.N*0.10),Told[round(p.N*0.10)],v,l)
     A2=constantA(round(p.N*0.40),Told[round(p.N*0.40)],v,l)
     A3=constantA(round(p.N*0.60),Told[round(p.N*0.60)],v,l)
@@ -100,6 +106,8 @@ def T_l(l,v,Told):
     B2=constantB(round(p.N*0.40),Told[round(p.N*0.40)],v,l)
     B3=constantB(round(p.N*0.60),Told[round(p.N*0.60)],v,l)
     B4=constantB(round(p.N*0.90),Told[round(p.N*0.90)],v,l)
+    
+
     F1=A1/B1
     F2=A2/B2
     F3=A3/B3
@@ -138,7 +146,7 @@ def T_l(l,v,Told):
         constantn=constant4
     elif l>p.length:
         print('error in dr_wall')
-        
+    n=round(l/p.length) 
     #het in elkaar zetten van de vergelijking voor de Temperatuur.
     B=constantB(n,Told[n],v,l)
     A=constantA(n,Told[n],v,l)
@@ -198,19 +206,19 @@ def velocity(v_i,Told):
 
 
 #initial condition of Temperature:
-T_0=np.zeros(blocks)
-for n in np.arange(0,blocks,1):
-    if n<0.25*blocks:
-        T_0[n]=(70+273.15)
-    elif (n>0.25*blocks or n==0.25*blocks) and (n<0.5*blocks) :
-        T_0[n]=(50+273.15)
-    elif (n>0.5*blocks or n==0.5*blocks) and (n<0.75*blocks) :
-        T_0[n]=(55+273.15)
-    elif (n>0.75*blocks or n==0.75*blocks) and (n<blocks) :
-        T_0[n]=(55+273.15)
-    elif n>blocks:
-        print('error in T_0 creation')
-
+#T_0=np.zeros(blocks)
+#for n in np.arange(0,blocks,1):
+#    if n<0.25*blocks:
+#        T_0[n]=(70+273.15)
+#    elif (n>0.25*blocks or n==0.25*blocks) and (n<0.5*blocks) :
+#        T_0[n]=(50+273.15)
+#    elif (n>0.5*blocks or n==0.5*blocks) and (n<0.75*blocks) :
+#        T_0[n]=(55+273.15)
+#    elif (n>0.75*blocks or n==0.75*blocks) and (n<blocks) :
+#        T_0[n]=(55+273.15)
+#    elif n>blocks:
+#        print('error in T_0 creation')
+T_0=To
 #berekenen van initial snelheid aan de hand van the initial condition van de temperature. 
 C1=constantC(round(p.N*0.10),0.03,T_0) #!!!!!!!!!! hier nog even naar de velocity kijken 
 C2=constantC(round(p.N*0.40),0.03,T_0)
@@ -226,11 +234,11 @@ v_0=np.sqrt(abs(ans1+ans2+ans3+ans4))
 Velocityend=np.array([v_0])
 i=0
 vi=Velocityend[i]
-vi_1= 0.00205150   #velocity(vi,T_0)[0]    #
+vi_1= velocity(vi,T_0)[0]    #
 Velocityend=np.append(Velocityend,vi_1)
 Tnew=T_0
 # Iteratieve methode om de snelheid te bepalen.
-while abs(vi-vi_1)>0.0000003 and i<15:
+while abs(vi-vi_1)>0.000000003 and i<15:
     i=i+1
     vi=Velocityend[i]
     vi_1=velocity(vi,Tnew)[0]
