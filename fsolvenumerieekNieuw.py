@@ -145,44 +145,44 @@ ax2.set_title('Temperature of wall')
 
 ### TEST FUNCTIONS ###
 if True:
-    fig, (ax1,ax2) = plt.subplots(1,2)
+    fig, (arx1,arx2) = plt.subplots(1,2)
     plt.suptitle('Transport')
-    ax1.plot(phiAB(v,T,Tb),'k')
-    ax1.set_ylabel('$\phi$')
-    ax1.set_xlabel('l')
-    ax1.set_title('$\phi_{AB}$')    
+    arx1.plot(phiAB(v,T,Tb),'k')
+    arx1.set_ylabel('$\phi_{AB}$')
+    arx1.set_xlabel('l')
+    arx1.set_title('Heat transport from the \n fluid to the wall')    
     
-    ax2.plot(phiBC(v,T,Tb),'k')
-    ax2.set_ylabel('$\phi$')
-    ax2.set_xlabel('l')
-    ax2.set_title('$\phi_{BC}$')
+    arx2.plot(phiBC(v,T,Tb),'k')
+    arx2.set_ylabel('$\phi_{BC}$')
+    arx2.set_xlabel('l')
+    arx2.set_title('Heat transport from the \n wall to the surrounding water')
 
-    fig, (ax1) = plt.subplots(1,1)
-    
+
+    fig, px1 = plt.subplots(1,1)
     Y=np.zeros(p.N)
+    Y2=np.zeros(p.N)
     for i in range(len(Y)):
         Y[i]=p.h_fluid(v, T[i])
+        Y2[i]=p.h_outside(i, v, T, Tb, i)
     plt.suptitle('Transport')
-    ax1.plot(Y,'k')
-    ax1.set_ylabel('$h_{fluid}$')
-    ax1.set_xlabel('l')
-    #ax1.set_title('$\phi_{AB}$')    
+    px1.plot(Y,'k')
+    px1.set_ylabel('$h_{fluid}$')
+    px1.set_xlabel('l')
+    px1.set_title('heat transfer coefficient of the fluid')    
     
-    fig, (ax1,ax2,ax3) = plt.subplots(1,3)    
-    ax1.plot(p.Reynolds(v, T),'k')
-    ax1.set_ylabel('$Reynodls$')
-    ax1.set_xlabel('l')
-    ax1.set_title('$\phi_{BC}$')
-
-    ax2.plot(p.Greatz(v),'k')
-    ax2.set_ylabel('$Greatz$')
-    ax2.set_xlabel('l')
-    ax2.set_title('$\phi_{BC}$')
     
-    ax3.plot(p.Prandtl(T),'k')
-    ax3.set_ylabel('$Prandtl$')
-    ax3.set_xlabel('l')
-    ax3.set_title('$\phi_{BC}$')
+    fig, (qx1,qx3) = plt.subplots(1,2)   
+    plt.suptitle('Dimensionless numbers,\n  We have a Greatz number of: Gr= %.3e' %(p.Greatz(v)))
+    qx1.plot(p.Reynolds(v, T),'k')
+    qx1.set_ylabel('$Re$')
+    qx1.set_xlabel('l')
+    qx1.set_title('Reynolds Number')
+    
+    qx3.plot(p.Prandtl(T),'k')
+    qx3.set_ylabel('$Pr$')
+    qx3.set_xlabel('l')
+    qx3.set_title('Prandtl')
+    
     
     fig, (gx1)=plt.subplots(1,1)
     h_c=np.zeros(p.N)
@@ -194,10 +194,14 @@ if True:
     gx1.set_xlabel('$l$')
     gx1.set_title('Heat transfer coefficient of surrounding water')
 
-    fig, (ax1,ax2) = plt.subplots(1,2)
-    ax1.plot(velocityzero(v,T,Tb))
-    ax2.plot(Tfluidzero(v,T,Tb),'r')
-    ax2.plot(Twallzero(v,T,Tb),'b')
+
+    fig, (abx2) = plt.subplots(1,1)
+    plt.suptitle('Order of Error of result of numerical method, \n  $\epsilon (v) =$ %.3e' %(velocityzero(v, T, Tb)))
+    abx2.plot(Tfluidzero(v,T,Tb),'r')
+    abx2.plot(Twallzero(v,T,Tb),'b')
+    abx2.set_ylabel('$\epsilon(T)$ & $\epsilon(T_B)$')
+    abx2.set_xlabel('l')
+    
 
 
 

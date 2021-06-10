@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat May 15 16:23:30 2021
+Created on Thu Jun 10 22:38:30 2021
 
 @author: ronar
 """
@@ -121,64 +121,44 @@ def T_l(l,v,Told):
     #constantes defenieren van de vergelijking voor de temperatuur
     deel2=((p.deel-0.25)/2)+0.25
     A1=constantA(round(p.N*0.10),Told[round(p.N*0.10)],v,0.10*p.length)
-    A2=constantA(round(p.N*deel2),Told[round(p.N*deel2)],v,deel2*p.length)
-    A3=constantA(round(p.N*0.60),Told[round(p.N*0.60)],v,0.60*p.length)
-    A4=constantA(round(p.N*0.90),Told[round(p.N*0.90)],v,0.90*p.length)
+    #A2=constantA(round(p.N*deel2),Told[round(p.N*deel2)],v,deel2*p.length)
+    A2=constantA(round(p.N*0.60),Told[round(p.N*0.60)],v,0.60*p.length)
+    #A4=constantA(round(p.N*0.90),Told[round(p.N*0.90)],v,0.90*p.length)
     B1=constantB(round(p.N*0.10),Told[round(p.N*0.10)],v,0.10*p.length)
-    B2=constantB(round(p.N*deel2),Told[round(p.N*deel2)],v,deel2*p.length)
-    B3=constantB(round(p.N*0.60),Told[round(p.N*0.60)],v,0.60*p.length)
-    B4=constantB(round(p.N*0.90),Told[round(p.N*0.90)],v,0.90*p.length)
+    #B2=constantB(round(p.N*deel2),Told[round(p.N*deel2)],v,deel2*p.length)
+    B2=constantB(round(p.N*0.60),Told[round(p.N*0.60)],v,0.60*p.length)
+    #B4=constantB(round(p.N*0.90),Told[round(p.N*0.90)],v,0.90*p.length)
     
 
     F1=B1/A1 #A1/B1
-    F2=B2/A2#A2/B2
-    F3=B3/A3#A3/B3
-    F4=B4/A4#A4/B4
-    C=np.array((F1,F2,F3,F4))
+    #F2=B2/A2#A2/B2
+    F2=B2/A2#A3/B3
+    #F4=B4/A4#A4/B4
+    #C=np.array((F1,F2,F3,F4))
     
     #lengtes definieren op verschillende punten  in de buis (randvoorwaarden op hoeken)
-    l1=0.25*p.length
-    l2=p.deel*p.length
-    l3=0.75*p.length
     l4=p.length
     
     #Constantes bepalen in vergelijking wat volgt uit de ODE en randvoorwaarden
-    ans1=(1-np.e**((-A4*l4-A1*l1+A2*l1-A2*l2+A3*l2-A3*l3+A4*l3)))**-1
-    ans2=(F1-F2)*(np.e**((-A1*l1)))
-    +(F2-F3)*np.e**((-A2*l2+A2*l1-A1*l1))
-    +(F3-F4)*np.e**((-A3*l3+A3*l2-A2*l2+A2*l1-A1*l1))
-    +(F4-F1)*np.e**((-A4*l4+A4*l3-A3*l3+A3*l2-A2*l2+A2*l1-A1*l1))
+    ans1=(np.e**(p.deel*A2*l4)-np.e**((A2*l4+p.deel*A1*l4)))**-1
+    ans2=F2*(1-np.e**(p.deel*A1*l4)) + F1*(np.e**(p.deel*A1*l4)-1)
 
-    constant1=(ans1*ans2)   
-    constant4=(-F1+F4+constant1)*np.e**(-A4*l4)
-    constant3=(-F4+F3+constant4*np.e**(A4*l3))*np.e**(-A3*l3)   
-    constant2=(-F3+F2+constant3*np.e**(A3*l2))*np.e**(-A2*l2)   
+    constant2=(ans1*ans2)   
+    constant1=-F2+F1+constant2*np.e**(A2*l4)
     
     #Bepalen in welk deel van de buis we zitten, dus welke constantes we moeten hebben
-    if l<0.25*p.length:
+    if l<p.deel*p.length:
         n=round(p.N*0.10)
         constantn=constant1
         A=A1
         B=B1
         sign=1
-    elif (l>0.25*p.length or l==0.25*p.length) and (l<p.deel*p.length) :
-        n=round(p.N*0.40)
+    elif (l>p.deel*p.length or l==p.deel*p.length) and (l<p.length) :
+        n=round(p.N*0.90)
         constantn=constant2
         A=A2
         B=B2
         sign=1
-    elif (l>p.deel*p.length or l==p.deel*p.length) and (l<0.75*p.length) :
-        n=round(p.N*deel2)
-        constantn=constant3
-        sign=-1
-        A=A3
-        B=B3
-    elif (l>0.75*p.length or l==0.75*p.length) and (l<p.length) :
-        n=round(p.N*0.90)
-        constantn=constant4
-        A=A4
-        B=B4
-        sign=-1
     elif l>p.length:
         print('error in dr_wall')
     n=round(l/p.length) 
@@ -244,10 +224,10 @@ def velocity(v_i,Told):
     T2new=np.append(T_l_values3,T_l_values4)
     Tnew=np.append(T1new,T2new)
     #uiteindelijk in elkaar zetten van de vergelijking voor de snelheid
-    ans1=C1*sum(T_l_values1)*(p.length/blocks)  +C1*(p.length/blocks)*(p.T_0+p.beta**-1)
-    ans2=C2*sum(T_l_values2)*(p.length/blocks)  +C2*(p.length/blocks)*(p.T_0+p.beta**-1)
-    ans3=C3*sum(T_l_values3)*(p.length/blocks)  +C3*(p.length/blocks)*(p.T_0+p.beta**-1)
-    ans4=C4*sum(T_l_values4)*(p.length/blocks)  +C4*(p.length/blocks)*(p.T_0+p.beta**-1)
+    ans1=C1*sum(T_l_values1)*(p.length/blocks)  #+C1*(p.length/blocks)*(p.T_0+p.beta**-1)
+    ans2=C2*sum(T_l_values2)*(p.length/blocks)  #+C2*(p.length/blocks)*(p.T_0+p.beta**-1)
+    ans3=C3*sum(T_l_values3)*(p.length/blocks)  #+C3*(p.length/blocks)*(p.T_0+p.beta**-1)
+    ans4=C4*sum(T_l_values4)*(p.length/blocks)  #+C4*(p.length/blocks)*(p.T_0+p.beta**-1)
     v=np.sqrt(abs(ans1+ans2+ans3+ans4))
     return v, Tnew, Co
 
@@ -286,8 +266,8 @@ vi_1= velocity(vi,T_0)[0]    #
 Velocityend=np.append(Velocityend,vi_1)
 Tnew=T_0
 # Iteratieve methode om de snelheid te bepalen.
-#while abs(vi-vi_1)>0.000000003 and i<15:
-for iterations in tqdm(np.arange(0,15,1)):
+while abs(vi-vi_1)>0.000000003 and i<15:
+#for iterations in tqdm(np.arange(0,15,1)):
     i=i+1
     vi=Velocityend[i]
     veli=velocity(vi,Tnew)
