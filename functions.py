@@ -51,11 +51,13 @@ def darcyfriction(v,T):
 def f1v(v,T):
     friction=darcyfriction(abs(v), T)/p.N
     if v>0:
-        f=((-2*friction*v**2)/p.r)-(((p.kw1+p.kw2)*v**2)/p.length)+((p.g/(p.N*p.rho_0))*gravity(v,T))
+        f=((-friction*v**2)/(4*p.r))-(((p.kw1+p.kw2)*v**2)/p.length)+((p.g/(p.N*p.rho_0))*gravity(v,T))
     else:
-        f=((+2*friction*v**2)/p.r)+(((p.kw1+p.kw2)*v**2)/p.length)+((p.g/(p.N*p.rho_0))*(-1)*gravity(v,T))
-    #f=(1/(p.tVsys*p.rho_0))*(-(v**2)*np.pi*p.r*p.rho_0*(friction*(p.length/p.N)+p.r*(p.kw1+p.kw2))+np.pi*p.g*(p.length/p.N)*(p.r**2)*gravity(T)) 
+        f=((friction*v**2)/(4*p.r))+(((p.kw1+p.kw2)*v**2)/p.length)+((p.g/(p.N*p.rho_0))*(-1)*gravity(v,T))
     return f
+    #f=(1/(p.tVsys*p.rho_0))*(-(v**2)*np.pi*p.r*p.rho_0*(friction*(p.length/p.N)+p.r*(p.kw1+p.kw2))+np.pi*p.g*(p.length/p.N)*(p.r**2)*gravity(T)) 
+
+
 
 #ODE from heat balance over fluid: (dTn/dt)
 def f2Tn(v,T,n,Tb):

@@ -109,7 +109,7 @@ def constantB(n,T,v,l):
 
 def constantC(n,v,T):
     friction=darcyfriction(v, T)/blocks
-    Cn=(-p.g*p.beta*np.sin(p.angle[n]))/(p.kw1+p.kw2+friction*p.length*(p.r**-1))
+    Cn=(-p.g*p.beta*np.sin(p.angle[n]))/(p.kw1+p.kw2+friction*p.length*((4*p.r)**-1))
     return Cn
 
 #def constant2C(n,v,T):                          Darcy friction is actually temperature and so space dependend!!!!

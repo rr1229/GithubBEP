@@ -178,7 +178,7 @@ def h_wall(n):
         d=dr[n]
     elif (n>0.75*N or n==0.75*N) and (n<N) :
         d=dr[n]
-    h=lambda_wall/d
+    h=4.36*lambda_wall/d
     return h
 
 def h_fluid(v,T):
@@ -220,7 +220,7 @@ def h_outside(n,v,T,Tb,m):
         #elif Gr>4*10**9 and Ra<10**11 and Ra>10**10:# :     #komt niet in deze region
         #    Nu=0.148*Ra**0.333
             
-            print('value Gr is smaller than 10^8, so falls in wrong regime Gr= %.3e' %(Gr))
+            #print('value Gr is smaller than 10^8, so falls in wrong regime Gr= %.3e' %(Gr))
         h_c=Nu*lambda_water/(length/4)
     
     elif 0<=n<N/4 or N/2<=n<3*N/4: #horizontal pipe
