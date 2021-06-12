@@ -186,23 +186,30 @@ def T_l(l,v,Told):
     #B=constantB(n,Told[n],v,l)
     #A=constantA(n,Told[n],v,l)
     
-    T_l=-B/A+constantn*np.e**(A*l)
+    T_l=(-B/A+constantn*np.e**(A*l))
     
     return T_l, constantn
 
 def velocity(v_i,Told):
     #constantes bereken in de vergelijking voor de snelheid
     deel2=((p.deel-0.25)/2)+0.25
+    lengthpart2=p.deel-0.25
+    lengthpart3=0.75-p.deel
     C1=constantC(round(p.N*0.10),v_i,Told)
     C2=constantC(round(p.N*deel2),v_i,Told)
     C3=constantC(round(p.N*0.60),v_i,Told)
     C4=constantC(round(p.N*0.90),v_i,Told)
     
     #lengtes definieren in buis in elke deel van de buis
-    values1=np.linspace(0,0.25*p.length-(0.25*p.length/25),round(blocks*0.25))
-    values2=np.linspace(0.25*p.length,p.deel*p.length-(0.25*p.length/25),round(blocks*0.25))
-    values3=np.linspace(p.deel*p.length,0.75*p.length-(0.25*p.length/25),round(blocks*0.25))
-    values4=np.linspace(0.75*p.length,p.length-(0.25*p.length/25),round(blocks*0.25))
+    step1=(0.25*p.length/round(blocks*0.25))
+    step2=(lengthpart2*p.length/round(blocks*0.25))
+    step3=(lengthpart3*p.length/round(blocks*0.25))
+    step4=(0.25*p.length/round(blocks*0.25))
+    
+    values1=np.linspace(0,0.25*p.length-step1,round(blocks*0.25))
+    values2=np.linspace(0.25*p.length,p.deel*p.length-step2,round(blocks*0.25))
+    values3=np.linspace(p.deel*p.length,0.75*p.length-step3,round(blocks*0.25))
+    values4=np.linspace(0.75*p.length,p.length-step4,round(blocks*0.25))
     
     #Lege vectoren maken voor het berekenen voor elke Temperatuur in de verschillende delen 
     T_l_values1=np.zeros(round(blocks*0.25))
@@ -243,13 +250,16 @@ def velocity(v_i,Told):
     T1new=np.append(T_l_values1,T_l_values2)
     T2new=np.append(T_l_values3,T_l_values4)
     Tnew=np.append(T1new,T2new)
+    length12=np.append(values1,values2)
+    length34=np.append(values3,values4)
+    length=np.append(length12,length34)
     #uiteindelijk in elkaar zetten van de vergelijking voor de snelheid
-    ans1=C1*sum(T_l_values1)*(p.length/blocks)  +C1*(p.length/blocks)*(p.T_0+p.beta**-1)
-    ans2=C2*sum(T_l_values2)*(p.length/blocks)  +C2*(p.length/blocks)*(p.T_0+p.beta**-1)
-    ans3=C3*sum(T_l_values3)*(p.length/blocks)  +C3*(p.length/blocks)*(p.T_0+p.beta**-1)
-    ans4=C4*sum(T_l_values4)*(p.length/blocks)  +C4*(p.length/blocks)*(p.T_0+p.beta**-1)
+    ans1=C1*sum(T_l_values1)*step1  +C1*step1*(p.T_0+p.beta**-1)
+    ans2=C2*sum(T_l_values2)*step2  +C2*step2*(p.T_0+p.beta**-1)
+    ans3=C3*sum(T_l_values3)*step3  +C3*step3*(p.T_0+p.beta**-1)
+    ans4=C4*sum(T_l_values4)*step4  +C4*step4*(p.T_0+p.beta**-1)
     v=np.sqrt(abs(ans1+ans2+ans3+ans4))
-    return v, Tnew, Co
+    return v, Tnew, Co, length
 
 
 #initial condition of Temperature:
@@ -286,14 +296,15 @@ vi_1= velocity(vi,T_0)[0]    #
 Velocityend=np.append(Velocityend,vi_1)
 Tnew=T_0
 # Iteratieve methode om de snelheid te bepalen.
-#while abs(vi-vi_1)>0.000000003 and i<15:
-for iterations in tqdm(np.arange(0,15,1)):
+while abs(vi-vi_1)>0.000000003 and i<15:
+#for iterations in tqdm(np.arange(0,15,1)):
     i=i+1
     vi=Velocityend[i]
     veli=velocity(vi,Tnew)
     vi_1=veli[0]
     Tnew=veli[1]
     C0=veli[2]
+    length=veli[3]
     Velocityend=np.append(Velocityend,vi_1)
     
     
@@ -305,7 +316,7 @@ kx1.set_ylabel('$v$')
 kx1.set_xlabel('$i$')
 
 lengthvector=np.linspace(0,p.length,p.N)
-kx2.plot(lengthvector,Tnew)
+kx2.plot(length,Tnew)
 kx2.set_title('Temperature of fluid')
 kx2.set_ylabel('$T$')
 kx2.set_xlabel('$l$')

@@ -115,9 +115,13 @@ def split(U):
 
 
 initialguess=np.concatenate([np.array([p.v_steadystate0]),p.T_steadystate0,p.Tb_steadystate0])
+#initialguess=np.concatenate([np.array([vend[len(vend)-1]]),p.T_steadystate0,p.Tb_steadystate0])
 
 if True:
+    #answer=optimize.newton_krylov(system,initialguess) # doet het nu niet 
+    #answer=optimize.newton(system,initialguess) # doet het alleeen als we de uitkomst van rungakutta pakken als initial condition
     answer=optimize.fsolve(system,initialguess)
+
 else:
     answer=initialguess
 
@@ -128,10 +132,11 @@ T,Tb=np.array_split(answer[1:],2)
 print('- - - - - - - \n \n \t velocity \n \t v = %.3e m/s \n \n mean temperature \n \t first quadrant \t T = %3.f K | Tb = %3.f \n \t second quadrant \t T = %3.f K | Tb = %3.f \n \t third quadrant \t T = %3.f K | Tb = %3.f \n \t fourth quadrant \t T = %3.f K | Tb = %3.f \n - - - - - - -  ' %(v,np.mean(T[0:int(p.N/4)]),np.mean(Tb[0:int(p.N/4)]),np.mean(T[int(p.N/4)+1:int(p.N/2)]),np.mean(Tb[int(p.N/4)+1:int(p.N/2)]),np.mean(T[int(p.N/2)+1:int(p.N*3/4)]),np.mean(Tb[int(p.N/2)+1:int(p.N*3/4)]),np.mean(T[int(p.N*3/4)+1:int(p.N-1)]),np.mean(Tb[int(p.N*3/4)+1:int(p.N-1)])) )
 
 
-
 fig, (ax1,ax2) = plt.subplots(1,2)
 plt.suptitle('Temperature')
 ax1.plot(T,'k')
+#ax1.plot(p.T_steadystate0,'r')
+#ax1.plot(Trk,'b')
 ax1.set_xlabel('$l$')
 ax1.set_ylabel('$T$')
 ax1.set_title('Temperature of fluid')
