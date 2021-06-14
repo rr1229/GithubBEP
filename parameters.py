@@ -18,8 +18,10 @@ import matplotlib.pyplot as plt
 N= 40 #number of segments, has to be multiple of 4
 anglepipe=5 * np.pi*2/360  # (radialen)  angle of horizontal pipes in system with horizontal, now 5 degrees 
 r= 3*10**-3 #3*10**-3 (meters) radius of inner tube
-dr1= 7*10**(-3)#7*10**-3  # (meters) thickness of wall of tube for part 1
-dr2= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 2
+dr1= 10*10**(-3)#7*10**-3  # (meters) thickness of wall of tube for part 1
+dr2= 9*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 4
+dr3= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 3
+dr4= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 4
 deel=0.5 #where in the tube the smaller diameter will appear, works between 0.25 and 0.75
 
 
@@ -57,7 +59,7 @@ def nu_fluid(T):
 solution=36/1000 #mol/kg maximum oplosbaarheid of salt in water
 Na=6.022045*10**23 # avogadro's number (6.022×1023 atoms= 1 mol)
 Sol_salt=Na*solution/rho_0 #atoms/m^3 maximum oplosbaarheid of salt in water
-Cross_section_b=10**-2 #b (barn=1^-28)    ordergroote????????????? neutron cross section of molybdenum98
+Cross_section_b=130*10**-3 #b (barn=1^-28) neutron cross section of molybdenum98   van bron: Can Enriched Molybdenum-98 Replace Enriched Uranium? Mushtaq Ahmad 
 Cross_section=Cross_section_b *10**-28 #m^-2
 Molair_Mo99=98.907707 #g/mol
 
@@ -79,17 +81,17 @@ a_water=lambda_water/(rho_water*Cp_water)
 
 '..........Geometrie.............' 
 Ltube=140*10**-3 #width of outer tube in reactor, from Laurens haffmans
-length=(4*(1+np.sin(anglepipe))**-1)*(Ltube-dr1-dr2-2*r) #hier gaan we ervan uit dat in de 1e buis de dikte altijd dr1 is en in de 3e buis altijd dr2
+length=(4*(1+np.sin(anglepipe))**-1)*(Ltube-dr1-dr3-2*r) #hier gaan we ervan uit dat in de 1e buis de dikte altijd dr1 is en in de 3e buis altijd dr2
 dr=np.zeros(N)
 for i in np.arange(0,N,1):
     if i<0.25*N:
         dr[i]=dr1
     elif (i>0.25*N or i==0.25*N) and (i<deel*N) :
-        dr[i]=dr1
+        dr[i]=dr2
     elif (i>deel*N or i==deel*N) and (i<0.75*N) :
-        dr[i]=dr2
+        dr[i]=dr3
     elif (i>0.75*N or i==0.75*N) and (i<N) :
-        dr[i]=dr2
+        dr[i]=dr4
 
 
 eff=1.5*(10**(-6)) #effective roughness of tube, 
