@@ -180,7 +180,8 @@ def h_wall(n):
         d=dr[n]
     elif (n>0.75*N or n==0.75*N) and (n<N) :
         d=dr[n]
-    h=4.36*lambda_wall/d
+    h=lambda_wall/d
+    #h=4.36*lambda_wall/d
     return h
 
 def h_fluid(v,T):
@@ -278,16 +279,16 @@ Tb_steadystate0=np.zeros(N)
 
 for n in np.arange(0,N,1):
     if n<0.25*N:
-        T_steadystate0[n]=(55+273.15)
+        T_steadystate0[n]=(50+273.15)
         Tb_steadystate0[n]=(60+273.15)
     elif (n>0.25*N or n==0.25*N) and (n<deel*N) :
-        T_steadystate0[n]=(58+273.15)
+        T_steadystate0[n]=(53+273.15)
         Tb_steadystate0[n]=(60+273.15)
     elif (n>deel*N or n==deel*N) and (n<0.75*N) :
-        T_steadystate0[n]=(57+273.15)
+        T_steadystate0[n]=(52+273.15)
         Tb_steadystate0[n]=(52+273.15)
     elif (n>0.75*N or n==0.75*N) and (n<N) :
-        T_steadystate0[n]=(54+273.15)
+        T_steadystate0[n]=(49+273.15)
         Tb_steadystate0[n]= (50+273.15)
     elif n>N:
         print('error in temp_0 creation')
