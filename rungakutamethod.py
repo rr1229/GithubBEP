@@ -63,8 +63,9 @@ def rungakutta(R,h):
     RK=[v,T,Tb,dvdt,dTndt,dTbdt]
     return RK
 
+#2def RK4solver(v0,T0,Tb0):
 initial=[p.v0,p.T0,p.Tb0]
-
+#initial=[v0,T0,Tb0]
 t=0
 h=0.5
 hmax=2*h
@@ -101,6 +102,8 @@ for tn in tqdm(np.arange(0,steps,1)):
     dvdtend[tn+1]=RK[3]
     dTndtend[:,tn+1]=RK[4]
     dTbdtend[:,tn+1]=RK[5]
+    
+#    return vend, Tend, Tbend
     
     
     # Tdiffmax=max(abs(Tend[:,tn]-Tend[:,tn+1]))
@@ -165,9 +168,12 @@ for tn in tqdm(np.arange(0,steps,1)):
 #     t=tn*h+t
 #     tend[tn+1]=t
     
-plt.plot(tend,vend)    
+
 
 if True:
+#if False:
+    plt.plot(tend,vend)    
+    
     #'plot of velocity'
     plt.plot(tend,vend) 
     plt.title('velocity of fluid')

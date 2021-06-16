@@ -84,9 +84,8 @@ def darcyfriction(v,T):
     Re=p.Reynolds(v, T)
     a=1/(1+((Re/2712)**8.4))
     b=1/(1+((Re/(150*2*p.r/p.eff))**1.8))
-    #a=1/(1+((Re/2.712)**8.4))
-    #df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(3.41*2*p.r/p.eff))**(2*(a-1)*(1-b)))
-    df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(6.82*2*p.r/p.eff))**(2*(a-1)*(1-b)))
+    df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(3.41*2*p.r/p.eff))**(2*(a-1)*(1-b)))
+    #df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(6.82*2*p.r/p.eff))**(2*(a-1)*(1-b)))
     f=np.sum(df)
     return f
         
@@ -200,10 +199,10 @@ def velocity(v_i,Told):
     step3=(lengthpart3*p.length/round(blocks*0.25))
     step4=(0.25*p.length/round(blocks*0.25))
     
-    values1=np.linspace(0,0.25*p.length-step1,round(blocks*0.25))
-    values2=np.linspace(0.25*p.length,p.deel*p.length-step2,round(blocks*0.25))
-    values3=np.linspace(p.deel*p.length,0.75*p.length-step3,round(blocks*0.25))
-    values4=np.linspace(0.75*p.length,p.length-step4,round(blocks*0.25))
+    values1=np.linspace(0+0.5*step1,0.25*p.length-0.5*step1,round(blocks*0.25))
+    values2=np.linspace(0.25*p.length+0.5*step2,p.deel*p.length-0.5*step2,round(blocks*0.25))
+    values3=np.linspace(p.deel*p.length+0.5*step3,0.75*p.length-0.5*step3,round(blocks*0.25))
+    values4=np.linspace(0.75*p.length+0.5*step4,p.length-0.5*step4,round(blocks*0.25))
     
     #Lege vectoren maken voor het berekenen voor elke Temperatuur in de verschillende delen 
     T_l_values1=np.zeros(round(blocks*0.25))

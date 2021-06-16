@@ -17,9 +17,8 @@ def darcyfriction(v,T,Tb=0):
     a=1/(1+((Re/2712)**8.4))
     b=1/(1+((Re/(150*2*p.r/p.eff))**1.8))
     #df=64/Re
-    #a=1/(1+((Re/2.712)**8.4))
-    #df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(3.41*2*p.r/p.eff))**(2*(a-1)*(1-b)))
-    df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(6.82*2*p.r/p.eff))**(2*(a-1)*(1-b)))
+    df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(3.41*2*p.r/p.eff))**(2*(a-1)*(1-b)))
+    #df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(6.82*2*p.r/p.eff))**(2*(a-1)*(1-b)))
     f=np.sum(df)
     if v>0:
         f1=f
@@ -151,7 +150,7 @@ ax2.set_title('Temperature of wall')
 
 
 ### TEST FUNCTIONS ###
-if True:
+if False:
     fig, (arx1,arx2) = plt.subplots(1,2)
     plt.suptitle('Transport')
     arx1.plot(phiAB(v,T,Tb),'k')
