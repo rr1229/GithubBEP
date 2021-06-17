@@ -19,10 +19,10 @@ import matplotlib.pyplot as plt
 N= 40 #number of segments, has to be multiple of 4
 anglepipe=5 * np.pi*2/360  # (radialen)  angle of horizontal pipes in system with horizontal, now 5 degrees 
 r= 3*10**-3 #3*10**-3 (meters) radius of inner tube
-dr1= 9*10**(-3)#7*10**-3  # (meters) thickness of wall of tube for part 1
-dr2= 9*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 4
-dr3= 2*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 3
-dr4= 2*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 4
+dr1= 7*10**(-3)#7*10**-3  # (meters) thickness of wall of tube for part 1
+dr2= 7*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 4
+dr3= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 3
+dr4= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 4
 deel=0.5 #where in the tube the smaller diameter will appear, works between 0.25 and 0.75
 
 
@@ -34,11 +34,15 @@ g=9.81  #gravitational accelaration in the netherlands
 flux=3.5*10**16 # m^-2 s^-1 neutron flux in reactor, form Laurens haffmans
 
 '......parameters of fluid.......'
-C_pfluid= 41875 # (J/(kg K)) specific heat capacity of fluid (now taken water at a pressure 10^5 Pa at 60 degrees)
-rho_0= 983.23  # (kg/m^3) reference density of WATER in pipe at temperature T_0, taken at atmospheric pressure (10^5 Pa)
-T_0= 60+273.15 # reference temperature for fluid, now taken at 60 degrees
+#C_pfluid= 41875 # (J/(kg K)) specific heat capacity of fluid (now taken water at a pressure 10^5 Pa at 60 degrees)
+#rho_0= 983.23  # (kg/m^3) reference density of WATER in pipe at temperature T_0, taken at atmospheric pressure (10^5 Pa)
+#T_0= 60+273.15 # reference temperature for fluid, now taken at 60 degrees
+#lambda_fluid=0.6506 #0.665 W/(m K)   #thermal conductivity of reference fluid, WATER at 60 degrees
+C_pfluid=3327# (J/(kg C)) specific heat capacity of fluid now taken for NaCl solution at 52 degrees
+rho_0=1147 #(kg/m^3) reference density of NaCl solution at 52 C
+T_0=52+273.15 # K reference temp. for NaCl solutuion taken 52 degrees
 beta= 4.57*10**-4  # (K**-1) ORDERGROOTESCHATTING Thermal expansion coefficient of WATER (data compagnion) (constant for determining density at different temperature)
-lambda_fluid=0.6506 #0.665 W/(m K)   #thermal conductivity of reference fluid, WATER at 60 degrees
+lambda_fluid=0.530 #(W/(m C)) thermal conductivity of NaCl solution at 52 degrees
 mu_20=1.002*10**-3 #Pa s  dynamic viscosity of reference fluid, water, at 20 degrees
 a_fluid=lambda_fluid/(rho_0*C_pfluid)     #thermal diffusivity of the fluid, now estimated for water now
 

@@ -52,40 +52,61 @@ initialguess=np.concatenate([np.array([p.v_steadystate0]),p.T_steadystate0,p.Tb_
 
 
 'Varieren van diktes van de buis'
-begindr1=1
-enddr1=100.01
-begindr3=0.5
-enddr3=60.1
-step1=1
-step3=1
+#begindr1=1
+#enddr1=90.01
+#begindr3=0.5
+#enddr3=40.1
+#step1=2
+#step3=2
 
-listnamev=['v_(dr1_0=%.2f,dr1_end=%.2f,step1=%.2f,dr3_0=%.2f,dr3_end=%.2f,step3=%.2f).npy' %(begindr1,enddr1,step1,begindr3,enddr3,step3)]
-listnameTn=['Tn_(dr1_0=%.2f,dr1_end=%.2f,step1=%.2f,dr3_0=%.2f,dr3_end=%.2f,step3=%.2f).npy' %(begindr1,enddr1,step1,begindr3,enddr3,step3)]
-listnameTbn=['Tbn_(dr1_0=%.2f,dr1_end=%.2f,step1=%.2f,dr3_0=%.2f,dr3_end=%.2f,step3=%.2f).npy' %(begindr1,enddr1,step1,begindr3,enddr3,step3)]
-listnamemaxT=['maxtemperature_(dr1_0=%.2f,dr1_end=%.2f,step1=%.2f,dr3_0=%.2f,dr3_end=%.2f,step3=%.2f).npy' %(begindr1,enddr1,step1,begindr3,enddr3,step3)]
-r=3*10**-3
+#listnamev=['v_(dr1_0=%.2f,dr1_end=%.2f,step1=%.2f,dr3_0=%.2f,dr3_end=%.2f,step3=%.2f).npy' %(begindr1,enddr1,step1,begindr3,enddr3,step3)]
+#listnameTn=['Tn_(dr1_0=%.2f,dr1_end=%.2f,step1=%.2f,dr3_0=%.2f,dr3_end=%.2f,step3=%.2f).npy' %(begindr1,enddr1,step1,begindr3,enddr3,step3)]
+#listnameTbn=['Tbn_(dr1_0=%.2f,dr1_end=%.2f,step1=%.2f,dr3_0=%.2f,dr3_end=%.2f,step3=%.2f).npy' %(begindr1,enddr1,step1,begindr3,enddr3,step3)]
+#listnamemaxT=['maxtemperature_(dr1_0=%.2f,dr1_end=%.2f,step1=%.2f,dr3_0=%.2f,dr3_end=%.2f,step3=%.2f).npy' %(begindr1,enddr1,step1,begindr3,enddr3,step3)]
+
+#r=3*10**-3
+#deel=0.5
+#vnsend=np.zeros((len(np.arange(begindr1,enddr1,step1)),len(np.arange(begindr3,enddr3,step3))))
+#Tnsend=np.zeros((p.N,len(np.arange(begindr1,enddr1,step1)),len(np.arange(begindr3,enddr3,step3))))
+#Tnsbend=np.zeros((p.N,len(np.arange(begindr1,enddr1,step1)),len(np.arange(begindr3,enddr3,step3))))
+#ite=0
+#drbelow=np.arange(begindr1,enddr1,step1)
+#drup=np.arange(begindr3,enddr3,step3)
+
+
+
+'variation of R and dr1'
+begindr1=1
+enddr1=45.01
+step1=1
+beginr=2
+endr=60.01
+stepr=1
+
+
+
+dr3=1*10**-3
+dr4=1*10**-3
 deel=0.5
-vnsend=np.zeros((len(np.arange(begindr1,enddr1,step1)),len(np.arange(begindr3,enddr3,step3))))
-Tnsend=np.zeros((p.N,len(np.arange(begindr1,enddr1,step1)),len(np.arange(begindr3,enddr3,step3))))
-Tnsbend=np.zeros((p.N,len(np.arange(begindr1,enddr1,step1)),len(np.arange(begindr3,enddr3,step3))))
+listnamev=['v_(dr1_0=%.2f,dr1_end=%.2f,step1=%.2f,r_0=%.2f,r_end=%.2f,stepr=%.2f).npy' %(begindr1,enddr1,step1,beginr,endr,stepr)]
+listnameTn=['Tn_(dr1_0=%.2f,dr1_end=%.2f,step1=%.2f,r_0=%.2f,r_end=%.2f,stepr=%.2f).npy' %(begindr1,enddr1,step1,beginr,endr,stepr)]
+listnameTbn=['Tbn_(dr1_0=%.2f,dr1_end=%.2f,step1=%.2f,r_0=%.2f,r_end=%.2f,stepr=%.2f).npy' %(begindr1,enddr1,step1,beginr,endr,stepr)]
+listnamemaxT=['maxtemperature_(dr1_0=%.2f,dr1_end=%.2f,step1=%.2f,r_0=%.2f,r_end=%.2f,stepr=%.2f).npy' %(begindr1,enddr1,step1,beginr,endr,stepr)]
+
+vnsend=np.zeros((len(np.arange(begindr1,enddr1,step1)),len(np.arange(beginr,endr,stepr))))
+Tnsend=np.zeros((p.N,len(np.arange(begindr1,enddr1,step1)),len(np.arange(beginr,endr,stepr))))
+Tnsbend=np.zeros((p.N,len(np.arange(begindr1,enddr1,step1)),len(np.arange(beginr,endr,stepr))))
 ite=0
 drbelow=np.arange(begindr1,enddr1,step1)
-drup=np.arange(begindr3,enddr3,step3)
-
-
+rtube=np.arange(beginr,endr,stepr)
 
 
 for thick1 in drbelow:
     dr1=thick1*10**-3
     dr2=thick1*10**-3
     j=0
-    for thick2 in drup:
-        dr3=thick2*10**-3
-        dr4=thick2*10**-3
-        
-        
-        
-        
+    for thickr in rtube:
+        r=thickr*10**-3
         
         anglepipe=p.anglepipe
         Ltube=p.Ltube
@@ -316,45 +337,57 @@ for thick1 in drbelow:
     ite=ite+1
 
 mx=0
-Maxtemperature=np.zeros((len(drbelow),len(drup)))
+Maxtemperature=np.zeros((len(drbelow),len(rtube)))
 interval=0
 for nTL in np.arange(0,N,1):
     for DRBTL in np.arange(0,len(drbelow),1):
-        for DRUTL in np.arange(0,len(drup),1):
+        for DRUTL in np.arange(0,len(rtube),1):
             mx=max(Tnsend[nTL,DRBTL,DRUTL],mx)
             Maxtemperature[DRBTL,DRUTL]=max(Maxtemperature[DRBTL,DRUTL],Tnsend[nTL,DRBTL,DRUTL])
             if Tnsend[nTL,DRBTL,DRUTL]>=273.15+90 and interval==0:
-                print('Temperature of fluid goes above 90 degrees, at segment %.f2 in the loop with dr1=%.3f and dr2=%.3f, with temperature %.3f K' %(nTL, drbelow[DRBTL],drup[DRUTL],Tnsend[nTL,DRBTL,DRUTL]))
+                print('Temperature of fluid goes above 90 degrees, at segment %.f2 in the loop with dr1=%.3f and r=%.3f, with temperature %.3f K' %(nTL, drbelow[DRBTL],rtube[DRUTL],Tnsend[nTL,DRBTL,DRUTL]))
                 interval=1
 mxb=0
 intervalb=0
 for nTbL in np.arange(0,N,1):
     for DRBTbL in np.arange(0,len(drbelow),1):
-        for DRUTbL in np.arange(0,len(drup),1):
+        for DRUTbL in np.arange(0,len(rtube),1):
             mxb=max(Tnsbend[nTL,DRBTbL,DRUTbL],mxb)
             if Tnsend[nTbL,DRBTbL,DRUTbL]>=273.15+150 and intervalb==0:
-                print('Temperature of wall goes above 150 degrees, at segment %.f2 in the loop with dr1=%.3f and dr2=%.3f' %(nTL, drbelow[DRBTL],drup[DRUTL]))
+                print('Temperature of wall goes above 150 degrees, at segment %.f2 in the loop with dr1=%.3f and r=%.3f' %(nTL, drbelow[DRBTL],rtube[DRUTL]))
                 intervalb=1
 
 plt.figure()
 np.save(listnameTn[0],Tnsend)
 np.save(listnameTbn[0],Tnsbend)
 np.save(listnamev[0],vnsend)
-plt.imshow(vnsend,extent=[drup[0],drup[-1],drbelow[0],drbelow[-1]],origin='lower')
+plt.imshow(vnsend,extent=[rtube[0],rtube[-1],drbelow[0],drbelow[-1]],origin='lower')
 plt.colorbar()
 
-plt.xlabel('thickness of cooling wall')
+plt.xlabel('radius of tube')
 plt.ylabel('thickness of heating wall')
-plt.title('velocity at different thicknesses')
+plt.title('velocity at different thicknesses and radius ')
 
 plt.figure()
 np.save(listnamemaxT[0],Maxtemperature)
 
-plt.imshow(Maxtemperature,extent=[drup[0],drup[-1],drbelow[0],drbelow[-1]],origin='lower')
+plt.imshow(Maxtemperature,extent=[rtube[0],rtube[-1],drbelow[0],drbelow[-1]],origin='lower')
 plt.colorbar()
 
-plt.xlabel('thickness of cooling wall')
+plt.xlabel('radius of tube')
 plt.ylabel('thickness of heating wall')
-plt.title('maximum temperature inside the loop at different thicknesses')
+plt.title('maximum temperature inside the loop at different thicknesses and radius')
 
 
+# mx=0
+# Maxtemperature=np.zeros((len(drbelow),len(drup)))
+# geldigregimeofniet=np.zeros((len(drbelow),len(drup)))
+# interval=0
+# for nTL in np.arange(0,N,1):
+#     for DRBTL in np.arange(0,len(drbelow),1):
+#         for DRUTL in np.arange(0,len(drup),1):
+#             mx=max(Tnsend[nTL,DRBTL,DRUTL],mx)
+#             Maxtemperature[DRBTL,DRUTL]=max(Maxtemperature[DRBTL,DRUTL],Tnsend[nTL,DRBTL,DRUTL])
+#             if Maxtemperature[DRBTL,DRUTL]>=273.15+90:
+#                 geldigregimeofniet[DRBTL,DRUTL]=1
+            
