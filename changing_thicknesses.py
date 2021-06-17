@@ -52,11 +52,11 @@ initialguess=np.concatenate([np.array([p.v_steadystate0]),p.T_steadystate0,p.Tb_
 
 
 'Varieren van diktes van de buis'
-begindr1=0.5
-enddr1=6.1
+begindr1=0.04
+enddr1=1.1
 begindr3=begindr1
 enddr3=enddr1
-step1=0.3
+step1=0.04
 step3=step1
 
 
@@ -307,7 +307,7 @@ for thick1 in drbelow:
     ite=ite+1
 
 
-plt.imshow(vnsend,extent=[drup[0],drup[-1],drbelow[0],drup[-1]])
+plt.imshow(vnsend,extent=[drup[0],drup[-1],drbelow[0],drup[-1]],origin='lower')
 plt.colorbar()
 
 plt.xlabel('thickness of cooling wall')
