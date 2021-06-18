@@ -64,7 +64,7 @@ initialguess=np.concatenate([np.array([p.v_steadystate0]),p.T_steadystate0,p.Tb_
 
 'variation of R and dr1'
 begindr1=10
-enddr1=40.01
+enddr1=30.01
 step1=0.5
 beginr=0.25
 endr=0.5
@@ -98,9 +98,9 @@ for thick1 in drbelow:
         
         "-----------------------Variables & Parameters----------------------------"
         '=====================changeble parameters========================'
-        N= 100 #number of segments, has to be multiple of 4
+        N= 40 #number of segments, has to be multiple of 4
         anglepipe=5 * np.pi*2/360  # (radialen)  angle of horizontal pipes in system with horizontal, now 5 degrees 
-        r= 35*10**-3#3*10**-3 #3*10**-3 (meters) radius of inner tube
+        r= 15*10**-3#3*10**-3 #3*10**-3 (meters) radius of inner tube
         dr1= dr1#20*10**-3#7*10**(-3)#7*10**-3  # (meters) thickness of wall of tube for part 1
         dr2= dr2 #20*10**-3#7*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 4
         dr3= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 3

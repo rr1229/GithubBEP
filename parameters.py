@@ -18,12 +18,12 @@ import matplotlib.pyplot as plt
 '=====================changeble parameters========================'
 N= 40 #number of segments, has to be multiple of 4
 anglepipe=5 * np.pi*2/360  # (radialen)  angle of horizontal pipes in system with horizontal, now 5 degrees 
-r= 35*10**-3#3*10**-3 #3*10**-3 (meters) radius of inner tube
+r= 15*10**-3#3*10**-3 #3*10**-3 (meters) radius of inner tube
 dr1= 20*10**-3#7*10**(-3)#7*10**-3  # (meters) thickness of wall of tube for part 1
 dr2= 20*10**-3#7*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 4
 dr3= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 3
 dr4= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 4
-deel=0.5 #where in the tube the smaller diameter will appear, works between 0.25 and 0.75
+deel=0.37 #where in the tube the smaller diameter will appear, works between 0.25 and 0.75
 
 
 
@@ -67,7 +67,7 @@ Molair_mass_mosalt=207.864601 *10**3 # kg/mol
 MolMo_98=solution/Molair_mass_mosalt #mol/L Mo98 in water
 Na=6.022045*10**23 # avogadro's number (6.022×1023 atoms= 1 mol)
 Sol_Mo98=Na*MolMo_98*10**3 # atoms/m^3 = Na*MolMo_98 atoms/L, max solution Mo98 in water
-#Sol_salt=Na*solution/rho_0 #atoms/m^3 maximum oplosbaarheid of salt in water
+Sol_salt=Na*solution/rho_0 #atoms/m^3 maximum oplosbaarheid of salt in water
 Cross_section_b=130*10**-3 #b (barn=1^-28) neutron cross section of molybdenum98   van bron: Can Enriched Molybdenum-98 Replace Enriched Uranium? Mushtaq Ahmad 
 Cross_section=Cross_section_b *10**-28 #m^-2
 Molair_Mo99=98.907707 #g/mol

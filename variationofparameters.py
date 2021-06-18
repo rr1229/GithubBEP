@@ -39,33 +39,38 @@ initialguess=np.concatenate([np.array([p.v_steadystate0]),p.T_steadystate0,p.Tb_
 
 
 'variation of R and dr1'
-begindr1=10
-enddr1=40.01
-step1=0.5
-beginr=0.25
-endr=0.5
-stepr=0.005
+beginparameter=0.3
+endparameter=3
+stepparameter=0.15
+#beginparameter2=0.5
+#endparameter2=1.5
+#stepparameter2=0.055
 
+parameter_afkorting="solubility"
+listnamev=['v_(%s_beginvalue=%.2f,end_value=%.2f,stepsize=%.2f).npy' %(parameter_afkorting,beginparameter,endparameter,stepparameter)] #
+listnameTn=['Tn_(%s_beginvalue=%.2f,end_value=%.2f,stepsize=%.2f).npy' %(parameter_afkorting,beginparameter,endparameter,stepparameter)]
+listnameTbn=['Tbn_(%s_beginvalue=%.2f,end_value=%.2f,stepsize=%.2f).npy' %(parameter_afkorting,beginparameter,endparameter,stepparameter)]
+listnamemaxT=['maxtemperature_(%s_beginvalue=%.2f,end_value=%.2f,stepsize=%.2f).npy' %(parameter_afkorting,beginparameter,endparameter,stepparameter)]
 
-listnamev=['v_(dr1_0=%.2f,dr1_end=%.2f,step1=%.2f,deel_0=%.2f,deel_end=%.2f,stepdeel=%.2f).npy' %(begindr1,enddr1,step1,beginr,endr,stepr)]
-listnameTn=['Tn_(dr1_0=%.2f,dr1_end=%.2f,step1=%.2f,deel_0=%.2f,deel_end=%.2f,stepdeel=%.2f).npy' %(begindr1,enddr1,step1,beginr,endr,stepr)]
-listnameTbn=['Tbn_(dr1_0=%.2f,dr1_end=%.2f,step1=%.2f,deel_0=%.2f,deel_end=%.2f,stepdeel=%.2f).npy' %(begindr1,enddr1,step1,beginr,endr,stepr)]
-listnamemaxT=['maxtemperature_(dr1_0=%.2f,dr1_end=%.2f,step1=%.2f,deel_0=%.2f,deel_end=%.2f,stepdeel=%.2f).npy' %(begindr1,enddr1,step1,beginr,endr,stepr)]
-
-vnsend=np.zeros((len(np.arange(begindr1,enddr1,step1)),len(np.arange(beginr,endr,stepr))))
-Tnsend=np.zeros((p.N,len(np.arange(begindr1,enddr1,step1)),len(np.arange(beginr,endr,stepr))))
-Tnsbend=np.zeros((p.N,len(np.arange(begindr1,enddr1,step1)),len(np.arange(beginr,endr,stepr))))
+vnsend=np.zeros(len(np.arange(beginparameter,endparameter,stepparameter)))
+Tnsend=np.zeros((p.N,len(np.arange(beginparameter,endparameter,stepparameter))))
+Tnsbend=np.zeros((p.N,len(np.arange(beginparameter,endparameter,stepparameter))))
 ite=0
-drbelow=np.arange(begindr1,enddr1,step1)
-rtube=np.arange(beginr,endr,stepr)
-
-
-for thick1 in drbelow:
-    C_pfluid= 41875 # (J/(kg K)) specific heat capacity of fluid (now taken water at a pressure 10^5 Pa at 60 degrees)
+paravary=np.arange(beginparameter,endparameter,stepparameter)
+#paravary2=-np.arange(-endparameter,-beginparameter,stepparameter)
+#paravary3=np.arange(beginparameter2,endparameter2,stepparameter2)
+variation_parameter="solubility of Sodium Molybdenum "
+parameter_symbol="solubility"
+#Darcytest=np.zeros(len(paravary))
+Reactiontest=np.zeros(len(paravary))
+for Par in paravary:
+    #Par2=paravary2[ite]
+    #Par3=paravary3[ite]
+    C_pfluid=  41875 # (J/(kg K)) specific heat capacity of fluid (now taken water at a pressure 10^5 Pa at 60 degrees)
     rho_0= 983.23  # (kg/m^3) reference density of WATER in pipe at temperature T_0, taken at atmospheric pressure (10^5 Pa)
     T_0= 60+273.15 # reference temperature for fluid, now taken at 60 degrees
-    lambda_fluid=0.6506 #0.665 W/(m K)   #thermal conductivity of reference fluid, WATER at 60 degrees
-    beta= 4.57*10**-4  # (K**-1) ORDERGROOTESCHATTING Thermal expansion coefficient of WATER (data compagnion) (constant for determining density at different temperature)
+    lambda_fluid= 0.6506 #0.665 W/(m K)   #thermal conductivity of reference fluid, WATER at 60 degrees
+    beta=4.57*10**-4  # (K**-1) Thermal expansion coefficient of WATER (data compagnion) (constant for determining density at different temperature)
     mu_20=1.002*10**-3 #Pa s  dynamic viscosity of reference fluid, water, at 20 degrees
     a_fluid=lambda_fluid/(rho_0*C_pfluid)     #thermal diffusivity of the fluid, now estimated for water now
     
@@ -84,12 +89,12 @@ for thick1 in drbelow:
     '=====================changeble parameters========================'
     N= 40 #number of segments, has to be multiple of 4
     anglepipe=5 * np.pi*2/360  # (radialen)  angle of horizontal pipes in system with horizontal, now 5 degrees 
-    r= 35*10**-3#3*10**-3 #3*10**-3 (meters) radius of inner tube
+    r= 15*10**-3#3*10**-3 #3*10**-3 (meters) radius of inner tube
     dr1= 20*10**-3#7*10**(-3)#7*10**-3  # (meters) thickness of wall of tube for part 1
     dr2= 20*10**-3#7*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 4
     dr3= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 3
     dr4= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 4
-    deel=0.5 #where in the tube the smaller diameter will appear, works between 0.25 and 0.75
+    deel=0.37 #where in the tube the smaller diameter will appear, works between 0.25 and 0.75
     
     
     
@@ -104,25 +109,7 @@ for thick1 in drbelow:
     #rho_0=1147 #(kg/m^3) reference density of NaCl solution at 52 C
     #T_0=52+273.15 # K reference temp. for NaCl solutuion taken 52 degrees
     #lambda_fluid=0.530 #(W/(m C)) thermal conductivity of NaCl solution at 52 degrees
-    C_pfluid= 41875 # (J/(kg K)) specific heat capacity of fluid (now taken water at a pressure 10^5 Pa at 60 degrees)
-    rho_0= 983.23  # (kg/m^3) reference density of WATER in pipe at temperature T_0, taken at atmospheric pressure (10^5 Pa)
-    T_0= 60+273.15 # reference temperature for fluid, now taken at 60 degrees
-    lambda_fluid=0.6506 #0.665 W/(m K)   #thermal conductivity of reference fluid, WATER at 60 degrees
-    beta= 4.57*10**-4  # (K**-1) ORDERGROOTESCHATTING Thermal expansion coefficient of WATER (data compagnion) (constant for determining density at different temperature)
-    mu_20=1.002*10**-3 #Pa s  dynamic viscosity of reference fluid, water, at 20 degrees
-    a_fluid=lambda_fluid/(rho_0*C_pfluid)     #thermal diffusivity of the fluid, now estimated for water now
-    
-    def mu_fluid(T):             #dynamic viscosity of reference fluid, NaCl dissolved at temperature T
-        mu_water=mu_20*np.e**((1.1709*(20+273.15-T)-0.001827*(T-20)**2)/(T+89.93))
-        Molair=58.44 #g/mol molair mass of NaCl
-        m=solution/Molair
-        A=0.008-(0.005/60)*(T-293.15)
-        B=0.06+(0.06/60)*(T-293.15)
-        mu_rel=1+(A*m**0.5)+B*m  # see bron Viscosity of Aqueous Solutions of Sodium Chloride
-                                #A. A. Aleksandrov, E. V. Dzhuraeva, and V. F. Utenkov
-        mu=mu_water*mu_rel
-        return mu 
-    
+        
     def nu_fluid(T):
         nu=mu_fluid(T)/rho_0
         return nu
@@ -130,7 +117,7 @@ for thick1 in drbelow:
     #solution=36/1000 #mol/kg maximum oplosbaarheid of salt in water
     solution=0.84 #kg/L = 84 g/100ml from pubchem solubility for Sodium molybdate
     Molair_mass_mosalt=207.864601 *10**3 # kg/mol
-    MolMo_98=solution/Molair_mass_mosalt #mol/L Mo98 in water
+    MolMo_98=Par*solution/Molair_mass_mosalt #mol/L Mo98 in water
     Na=6.022045*10**23 # avogadro's number (6.022×1023 atoms= 1 mol)
     Sol_Mo98=Na*MolMo_98*10**3 # atoms/m^3 = Na*MolMo_98 atoms/L, max solution Mo98 in water
     #Sol_salt=Na*solution/rho_0 #atoms/m^3 maximum oplosbaarheid of salt in water
@@ -216,10 +203,11 @@ for thick1 in drbelow:
         R_mass=R*Molair_Mo99/Na #g per volume
         return R_mass*tVsys #g mo99 per second
     
-    
+    Reactiontest[ite]=Reaction()
     '_______________dimensionless numbers________________'
     def Reynolds(v,T):
-        mu=mu_20*np.e**((1.1709*(20+273.15-T)-0.001827*(T-20)**2)/(T+89.93))
+        mu=mu_fluid(T)
+        #mu=mu_20*np.e**((1.1709*(20+273.15-T)-0.001827*(T-20)**2)/(T+89.93))
         re=rho_0*v*2*r*(1/mu)
         return abs(re) #re
         
@@ -341,7 +329,7 @@ for thick1 in drbelow:
         
     
     def darcyfriction(v,T,Tb=0):
-        Re=p.Reynolds(v, T)
+        Re=Reynolds(v, T)
         a=1/(1+((Re/2712)**8.4))
         b=1/(1+((Re/(150*2*r/p.eff))**1.8))
         #df=64/Re
@@ -417,7 +405,7 @@ for thick1 in drbelow:
     
     v2=answer[0]
     T2,Tb2=np.array_split(answer[1:],2)
-    
+    #Darcytest[ite]=darcyfriction(v2, T2)
     vnsend[ite]=v2
     Tnsend[:,ite]=T2
     Tnsbend[:,ite]=Tb2
@@ -427,89 +415,87 @@ for thick1 in drbelow:
     ite=ite+1
 
 mx=0
-Maxtemperature=np.zeros((len(drbelow),len(rtube)))
+Maxtemperature=np.zeros((len(paravary)))
 interval=0
 for nTL in np.arange(0,p.N,1):
-    for DRBTL in np.arange(0,len(drbelow),1):
-        for DRUTL in np.arange(0,len(rtube),1):
-            mx=max(Tnsend[nTL,DRBTL,DRUTL],mx)
-            Maxtemperature[DRBTL,DRUTL]=max(Maxtemperature[DRBTL,DRUTL],Tnsend[nTL,DRBTL,DRUTL])
-            if Tnsend[nTL,DRBTL,DRUTL]>=273.15+90 and interval==0:
-                print('Temperature of fluid goes above 90 degrees, at segment %.f2 in the loop with dr1=%.3f and verticaldeel=%.3f, with temperature %.3f K' %(nTL, drbelow[DRBTL],rtube[DRUTL],Tnsend[nTL,DRBTL,DRUTL]))
-                interval=1
+    for parnumber in np.arange(0,len(paravary),1):
+        mx=max(Tnsend[nTL,parnumber],mx)
+        Maxtemperature[parnumber]=max(Maxtemperature[parnumber],Tnsend[nTL,parnumber])
+        if Tnsend[nTL,parnumber]>=273.15+90 and interval==0:
+            print('Temperature of fluid goes above 90 degrees, at segment %.f2 in the loop with parameter=%.3f, with temperature %.3f K' %(nTL, paravary[parnumber],Tnsend[nTL,parnumber]))
+            interval=1
 mxb=0
 intervalb=0
 for nTbL in np.arange(0,p.N,1):
-    for DRBTbL in np.arange(0,len(drbelow),1):
-        for DRUTbL in np.arange(0,len(rtube),1):
-            mxb=max(Tnsbend[nTL,DRBTbL,DRUTbL],mxb)
-            if Tnsend[nTbL,DRBTbL,DRUTbL]>=273.15+150 and intervalb==0:
-                print('Temperature of wall goes above 150 degrees, at segment %.f2 in the loop with dr1=%.3f and verticaldeel=%.3f' %(nTL, drbelow[DRBTL],rtube[DRUTL]))
-                intervalb=1
+    for parnumber in np.arange(0,len(paravary),1):
+        mxb=max(Tnsbend[nTL,parnumber],mxb)
+        if Tnsend[nTbL,parnumber]>=273.15+150 and intervalb==0:
+            print('Temperature of wall goes above 150 degrees, at segment %.f2 in the loop with parameter=%.3f' %(nTL, paravary[parnumber]))
+            intervalb=1
 
 plt.figure()
 np.save(listnameTn[0],Tnsend)
 np.save(listnameTbn[0],Tnsbend)
 np.save(listnamev[0],vnsend)
-plt.imshow(vnsend,extent=[rtube[0],rtube[-1],drbelow[0],drbelow[-1]],origin='lower', aspect='auto')
-plt.colorbar()
+plt.plot(paravary,vnsend)
+#plt.imshow(vnsend,extent=[rtube[0],rtube[-1],drbelow[0],drbelow[-1]],origin='lower', aspect='auto')
+#plt.colorbar()
 
-plt.xlabel('location in loop when thickness changes')
-plt.ylabel('thickness of heating wall')
-plt.title('velocity at different thickness profile of the wall')
+plt.xlabel('Paramter variation of %s' %(parameter_symbol))
+plt.ylabel('velocity')
+plt.title('velocity at different values of the %s ' %(variation_parameter))
 
-plt.figure()
-np.save(listnamemaxT[0],Maxtemperature)
 
-plt.imshow(Maxtemperature,extent=[rtube[0],rtube[-1],drbelow[0],drbelow[-1]],origin='lower', aspect='auto')
-plt.colorbar()
-
-plt.xlabel('location in loop when thickness changes')
-plt.ylabel('thickness of heating wall')
-plt.title('maximum temperature inside the loop \n at different thickness profile of the wall')
 
 'determining maxtemperature and safety region '
 if True:
     mx=0
-    Maxtemperature=np.zeros((len(drbelow),len(rtube)))
-    geldigregimeofniet=np.zeros((len(drbelow),len(rtube)))
+    Maxtemperature=np.zeros(len(paravary))
+    geldigregimeofniet=np.zeros(len(paravary))
     interval=0
     for nTL in np.arange(0,p.N,1):
-        for DRBTL in np.arange(0,len(drbelow),1):
-            for DRUTL in np.arange(0,len(rtube),1):
-                mx=max(Tnsend[nTL,DRBTL,DRUTL],mx)
-                Maxtemperature[DRBTL,DRUTL]=max(Maxtemperature[DRBTL,DRUTL],Tnsend[nTL,DRBTL,DRUTL])
-                if Maxtemperature[DRBTL,DRUTL]>=273.15+90:
-                    geldigregimeofniet[DRBTL,DRUTL]=1
+        for paranumber in np.arange(0,len(paravary),1):
+            mx=max(Tnsend[nTL,paranumber],mx)
+            Maxtemperature[paranumber]=max(Maxtemperature[paranumber],Tnsend[nTL,paranumber])
+            if Maxtemperature[paranumber]>=273.15+90:
+                geldigregimeofniet[paranumber]=1
     
     plt.figure()
-    plt.imshow(Maxtemperature,extent=[rtube[0],rtube[-1],drbelow[0],drbelow[-1]],origin='lower', aspect='auto')
-    plt.colorbar()
-    plt.xlabel('location in loop when thickness changes')
-    plt.ylabel('thickness of heating wall')
-    plt.title('Maximum temperature in the loop at \n different thickness profile of the wall')
+    #plt.imshow(Maxtemperature,extent=[rtube[0],rtube[-1],drbelow[0],drbelow[-1]],origin='lower', aspect='auto')
+    plt.plot(paravary,Maxtemperature)
+    #plt.colorbar()
+    plt.xlabel('Parameter variation of %s ' %(parameter_symbol))
+    plt.ylabel('Maximum temperature in system ')
+    plt.title('Maximum temperature in the loop at \n different values of the %s' %(variation_parameter))
     
     plt.figure()
-    plt.imshow(geldigregimeofniet,extent=[rtube[0],rtube[-1],drbelow[0],drbelow[-1]],origin='lower', aspect='auto')
+    #plt.imshow(geldigregimeofniet,extent=[rtube[0],rtube[-1],drbelow[0],drbelow[-1]],origin='lower', aspect='auto')
+    plt.plot(paravary,geldigregimeofniet)
+    #plt.colorbar()
+    plt.xlabel('Parameter variatie van %s' %(parameter_symbol))
+    plt.ylabel('safe temp')
+    plt.title('safety region inside the loop with temperature below 90$^o$ C \n of the loop at different values of the %s ' %(variation_parameter))
+
+'plotting temperature profile'
+if True:
+    plt.figure()
+    plt.imshow(Tnsend,extent=[paravary[0],paravary[-1],0,length],origin='lower',aspect='auto')
     plt.colorbar()
-    plt.xlabel('location in loop when thickness changes')
-    plt.ylabel('thickness of heating wall')
-    plt.title('safety region inside the loop with temperature below 90$^o$ C \n of the loop at different thickness profile of the wall')
+    plt.xlabel('Parameter variatie van %s' %(parameter_symbol))
+    plt.ylabel('l')
+    plt.title('temperature profile of the loop\n at different values of the %s ' %(variation_parameter))
 
-
-
+    
+    
 'determining maximum velocity'
 if True:
     mxv=0
-    for DRBTL in np.arange(0,len(drbelow),1):
-        for DRUTL in np.arange(0,len(rtube),1):
-            mxv=max(vnsend[DRBTL,DRUTL],mxv)
-            #Maxtemperature[DRBTL,DRUTL]=max(Maxtemperature[DRBTL,DRUTL],Tnsend[nTL,DRBTL,DRUTL])
-            if vnsend[DRBTL,DRUTL]>=mxv:
-                Vplaceofdr=drbelow[DRBTL]
-                Vplaceofr=rtube[DRUTL]
-                VNdr=DRBTL
-                VNr=DRUTL
+    for paranumber in np.arange(0,len(paravary),1):
+        mxv=max(vnsend[paranumber],mxv)
+        #Maxtemperature[DRBTL,DRUTL]=max(Maxtemperature[DRBTL,DRUTL],Tnsend[nTL,DRBTL,DRUTL])
+        if vnsend[paranumber]>=mxv:
+            Vplaceofpara=paravary[paranumber]
+            VNpara=paranumber
 
 
 'determining length of sytem and feasible region'
@@ -575,7 +561,7 @@ if False:
     plt.title('Reaction Rate the loop at different thickness profile of the wall')
     
     'determining max production'
-    if True:
+    if False:
         mxP=0
         for DRBTL in np.arange(0,len(drbelow),1):
             for DRUTL in np.arange(0,len(rtube),1):

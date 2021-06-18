@@ -76,11 +76,11 @@ initialguess=np.concatenate([np.array([p.v_steadystate0]),p.T_steadystate0,p.Tb_
 
 
 'variation of R and dr1'
-begindr1=5
-enddr1=70.01
+begindr1=3
+enddr1=40.01
 step1=1
-beginr=5
-endr=70.01
+beginr=3
+endr=40.01
 stepr=1
 
 
@@ -451,6 +451,25 @@ if True:
     plt.ylabel('thickness of heating wall')
     plt.title('correct region of length of the loop at different thicknesses and radius')
     
+'determining length of system feasible with wide of system'
+if True:
+    geldigregimeofnietvoorlengthandwide=np.zeros((len(drbelow),len(rtube)))
+    for DRBTL in np.arange(0,len(drbelow),1):
+        dr1=drbelow[DRBTL]*10**-3
+        for DRUTL in np.arange(0,len(rtube),1):
+            r=rtube[DRUTL]*10**-3
+            #mx=max(Tnsend[nTL,DRBTL,DRUTL],mx)
+            lengthofsystem[DRBTL,DRUTL]=(4*(1+np.sin(anglepipe))**-1)*(Ltube-dr1-dr3-2*r)
+            if lengthofsystem[DRBTL,DRUTL]*0.25<=(2*r+dr1+dr3):
+                    geldigregimeofnietvoorlengthandwide[DRBTL,DRUTL]=1   
+    plt.figure
+    plt.imshow(geldigregimeofnietvoorlengthandwide,extent=[rtube[0],rtube[-1],drbelow[0],drbelow[-1]],origin='lower')
+    plt.colorbar()
+    plt.xlabel('radius of tube')
+    plt.ylabel('thickness of heating wall')
+    plt.title('correct region of length of the loop since wide at different thicknesses and radius')
+
+
 
 'determining production and volume of system'
 if True:
