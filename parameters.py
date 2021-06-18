@@ -18,9 +18,9 @@ import matplotlib.pyplot as plt
 '=====================changeble parameters========================'
 N= 40 #number of segments, has to be multiple of 4
 anglepipe=5 * np.pi*2/360  # (radialen)  angle of horizontal pipes in system with horizontal, now 5 degrees 
-r= 3*10**-3 #3*10**-3 (meters) radius of inner tube
-dr1= 7*10**(-3)#7*10**-3  # (meters) thickness of wall of tube for part 1
-dr2= 7*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 4
+r= 30*10**-3#3*10**-3 #3*10**-3 (meters) radius of inner tube
+dr1= 60*10**-3#7*10**(-3)#7*10**-3  # (meters) thickness of wall of tube for part 1
+dr2= 60*10**-3#7*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 4
 dr3= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 3
 dr4= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 4
 deel=0.5 #where in the tube the smaller diameter will appear, works between 0.25 and 0.75
@@ -34,15 +34,15 @@ g=9.81  #gravitational accelaration in the netherlands
 flux=3.5*10**16 # m^-2 s^-1 neutron flux in reactor, form Laurens haffmans
 
 '......parameters of fluid.......'
-#C_pfluid= 41875 # (J/(kg K)) specific heat capacity of fluid (now taken water at a pressure 10^5 Pa at 60 degrees)
-#rho_0= 983.23  # (kg/m^3) reference density of WATER in pipe at temperature T_0, taken at atmospheric pressure (10^5 Pa)
-#T_0= 60+273.15 # reference temperature for fluid, now taken at 60 degrees
-#lambda_fluid=0.6506 #0.665 W/(m K)   #thermal conductivity of reference fluid, WATER at 60 degrees
-C_pfluid=3327# (J/(kg C)) specific heat capacity of fluid now taken for NaCl solution at 52 degrees
-rho_0=1147 #(kg/m^3) reference density of NaCl solution at 52 C
-T_0=52+273.15 # K reference temp. for NaCl solutuion taken 52 degrees
+#C_pfluid=3327# (J/(kg C)) specific heat capacity of fluid now taken for NaCl solution at 52 degrees
+#rho_0=1147 #(kg/m^3) reference density of NaCl solution at 52 C
+#T_0=52+273.15 # K reference temp. for NaCl solutuion taken 52 degrees
+#lambda_fluid=0.530 #(W/(m C)) thermal conductivity of NaCl solution at 52 degrees
+C_pfluid= 41875 # (J/(kg K)) specific heat capacity of fluid (now taken water at a pressure 10^5 Pa at 60 degrees)
+rho_0= 983.23  # (kg/m^3) reference density of WATER in pipe at temperature T_0, taken at atmospheric pressure (10^5 Pa)
+T_0= 60+273.15 # reference temperature for fluid, now taken at 60 degrees
+lambda_fluid=0.6506 #0.665 W/(m K)   #thermal conductivity of reference fluid, WATER at 60 degrees
 beta= 4.57*10**-4  # (K**-1) ORDERGROOTESCHATTING Thermal expansion coefficient of WATER (data compagnion) (constant for determining density at different temperature)
-lambda_fluid=0.530 #(W/(m C)) thermal conductivity of NaCl solution at 52 degrees
 mu_20=1.002*10**-3 #Pa s  dynamic viscosity of reference fluid, water, at 20 degrees
 a_fluid=lambda_fluid/(rho_0*C_pfluid)     #thermal diffusivity of the fluid, now estimated for water now
 
@@ -61,9 +61,13 @@ def nu_fluid(T):
     nu=mu_fluid(T)/rho_0
     return nu
 'production Mo99'
-solution=36/1000 #mol/kg maximum oplosbaarheid of salt in water
+#solution=36/1000 #mol/kg maximum oplosbaarheid of salt in water
+solution=0.84 #kg/L = 84 g/100ml from pubchem solubility for Sodium molybdate
+Molair_mass_mosalt=207.864601 *10**3 # kg/mol
+MolMo_98=solution/Molair_mass_mosalt #mol/L Mo98 in water
 Na=6.022045*10**23 # avogadro's number (6.022×1023 atoms= 1 mol)
-Sol_salt=Na*solution/rho_0 #atoms/m^3 maximum oplosbaarheid of salt in water
+Sol_Mo98=Na*MolMo_98*10**3 # atoms/m^3 = Na*MolMo_98 atoms/L, max solution Mo98 in water
+#Sol_salt=Na*solution/rho_0 #atoms/m^3 maximum oplosbaarheid of salt in water
 Cross_section_b=130*10**-3 #b (barn=1^-28) neutron cross section of molybdenum98   van bron: Can Enriched Molybdenum-98 Replace Enriched Uranium? Mushtaq Ahmad 
 Cross_section=Cross_section_b *10**-28 #m^-2
 Molair_Mo99=98.907707 #g/mol
@@ -148,7 +152,7 @@ for n in np.arange(0,N,1):
     
 '___________________Mo98 production_______________________'
 def Reaction():
-    N= Sol_salt#atoms Mo98 per volume
+    N= Sol_Mo98#atoms Mo98 per volume
     R=Cross_section*flux*N  #atoms mo99 per volume
     R_mass=R*Molair_Mo99/Na #g per volume
     return R_mass*tVsys #g mo99 per second

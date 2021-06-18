@@ -76,11 +76,11 @@ initialguess=np.concatenate([np.array([p.v_steadystate0]),p.T_steadystate0,p.Tb_
 
 
 'variation of R and dr1'
-begindr1=1
-enddr1=45.01
+begindr1=5
+enddr1=70.01
 step1=1
-beginr=2
-endr=60.01
+beginr=5
+endr=70.01
 stepr=1
 
 
@@ -378,16 +378,128 @@ plt.xlabel('radius of tube')
 plt.ylabel('thickness of heating wall')
 plt.title('maximum temperature inside the loop at different thicknesses and radius')
 
+'determining maxtemperature and safety region '
+if True:
+    mx=0
+    Maxtemperature=np.zeros((len(drbelow),len(rtube)))
+    geldigregimeofniet=np.zeros((len(drbelow),len(rtube)))
+    interval=0
+    for nTL in np.arange(0,N,1):
+        for DRBTL in np.arange(0,len(drbelow),1):
+            for DRUTL in np.arange(0,len(rtube),1):
+                mx=max(Tnsend[nTL,DRBTL,DRUTL],mx)
+                Maxtemperature[DRBTL,DRUTL]=max(Maxtemperature[DRBTL,DRUTL],Tnsend[nTL,DRBTL,DRUTL])
+                if Maxtemperature[DRBTL,DRUTL]>=273.15+90:
+                    geldigregimeofniet[DRBTL,DRUTL]=1
+    
+    plt.figure()
+    plt.imshow(Maxtemperature,extent=[rtube[0],rtube[-1],drbelow[0],drbelow[-1]],origin='lower')
+    plt.colorbar()
+    plt.xlabel('radius of tube')
+    plt.ylabel('thickness of heating wall')
+    plt.title('Maximum temperature in the loop at different thicknesses and radius')
+    
+    plt.figure()
+    plt.imshow(geldigregimeofniet,extent=[rtube[0],rtube[-1],drbelow[0],drbelow[-1]],origin='lower')
+    plt.colorbar()
+    plt.xlabel('radius of tube')
+    plt.ylabel('thickness of heating wall')
+    plt.title('safety region inside the loop with temperature below 90$^o$ C \n of the loop at different thicknesses and radius')
 
-# mx=0
-# Maxtemperature=np.zeros((len(drbelow),len(drup)))
-# geldigregimeofniet=np.zeros((len(drbelow),len(drup)))
-# interval=0
-# for nTL in np.arange(0,N,1):
-#     for DRBTL in np.arange(0,len(drbelow),1):
-#         for DRUTL in np.arange(0,len(drup),1):
-#             mx=max(Tnsend[nTL,DRBTL,DRUTL],mx)
-#             Maxtemperature[DRBTL,DRUTL]=max(Maxtemperature[DRBTL,DRUTL],Tnsend[nTL,DRBTL,DRUTL])
-#             if Maxtemperature[DRBTL,DRUTL]>=273.15+90:
-#                 geldigregimeofniet[DRBTL,DRUTL]=1
-            
+
+
+'determining maximum velocity'
+if True:
+    mxv=0
+    for DRBTL in np.arange(0,len(drbelow),1):
+        for DRUTL in np.arange(0,len(rtube),1):
+            mxv=max(vnsend[DRBTL,DRUTL],mxv)
+            #Maxtemperature[DRBTL,DRUTL]=max(Maxtemperature[DRBTL,DRUTL],Tnsend[nTL,DRBTL,DRUTL])
+            if vnsend[DRBTL,DRUTL]>=mxv:
+                Vplaceofdr=drbelow[DRBTL]
+                Vplaceofr=rtube[DRUTL]
+                VNdr=DRBTL
+                VNr=DRUTL
+
+
+'determining length of sytem and feasible region'
+if True:
+    mx=0
+    lengthofsystem=np.zeros((len(drbelow),len(rtube)))
+    geldigregimeofnietvoorlength=np.zeros((len(drbelow),len(rtube)))
+    interval=0
+    for DRBTL in np.arange(0,len(drbelow),1):
+        dr1=drbelow[DRBTL]*10**-3
+        for DRUTL in np.arange(0,len(rtube),1):
+            r=rtube[DRUTL]*10**-3
+            #mx=max(Tnsend[nTL,DRBTL,DRUTL],mx)
+            lengthofsystem[DRBTL,DRUTL]=(4*(1+np.sin(anglepipe))**-1)*(Ltube-dr1-dr3-2*r)
+            if lengthofsystem[DRBTL,DRUTL]<=0:
+                    geldigregimeofnietvoorlength[DRBTL,DRUTL]=1           
+    
+    plt.figure()
+    plt.imshow(lengthofsystem,extent=[rtube[0],rtube[-1],drbelow[0],drbelow[-1]],origin='lower')
+    plt.colorbar()
+    plt.xlabel('radius of tube')
+    plt.ylabel('thickness of heating wall')
+    plt.title('length of the loop at different thicknesses and radius')
+    
+    plt.figure()
+    plt.imshow(geldigregimeofnietvoorlength,extent=[rtube[0],rtube[-1],drbelow[0],drbelow[-1]],origin='lower')
+    plt.colorbar()
+    plt.xlabel('radius of tube')
+    plt.ylabel('thickness of heating wall')
+    plt.title('correct region of length of the loop at different thicknesses and radius')
+    
+
+'determining production and volume of system'
+if True:
+    mx=0
+    Natoms= p.Sol_Mo98#atoms Mo98 per volume
+    Ratoms=p.Cross_section*p.flux*Natoms #atoms mo99 per volume
+    R_mass=Ratoms*p.Molair_Mo99/p.Na #g per volume
+    volumeofsystem=np.zeros((len(drbelow),len(rtube)))
+    Reactionpersecond=np.zeros((len(drbelow),len(rtube))) #in gram 
+    interval=0
+    for DRBTL in np.arange(0,len(drbelow),1):
+        dr1=drbelow[DRBTL]*10**-3
+        for DRUTL in np.arange(0,len(rtube),1):
+            r=rtube[DRUTL]*10**-3
+            #mx=max(Tnsend[nTL,DRBTL,DRUTL],mx)
+            lengthofsystem=(4*(1+np.sin(anglepipe))**-1)*(Ltube-dr1-dr3-2*r)
+            volumeofsystem[DRBTL,DRUTL]=lengthofsystem*np.pi*r**2
+            Reactionpersecond[DRBTL,DRUTL]=R_mass*volumeofsystem[DRBTL,DRUTL]
+    
+    plt.figure()
+    plt.imshow(volumeofsystem,extent=[rtube[0],rtube[-1],drbelow[0],drbelow[-1]],origin='lower')
+    plt.colorbar()
+    plt.xlabel('radius of tube')
+    plt.ylabel('thickness of heating wall')
+    plt.title('volume of the loop at different thicknesses and radius')
+    
+    plt.figure()
+    plt.imshow(Reactionpersecond,extent=[rtube[0],rtube[-1],drbelow[0],drbelow[-1]],origin='lower')
+    plt.colorbar()
+    plt.xlabel('radius of tube')
+    plt.ylabel('thickness of heating wall')
+    plt.title('Reaction Rate the loop at different thicknesses and radius')
+    
+    'determining max production'
+    if True:
+        mxP=0
+        for DRBTL in np.arange(0,len(drbelow),1):
+            for DRUTL in np.arange(0,len(rtube),1):
+                mxP=max(Reactionpersecond[DRBTL,DRUTL],mxv)
+                #Maxtemperature[DRBTL,DRUTL]=max(Maxtemperature[DRBTL,DRUTL],Tnsend[nTL,DRBTL,DRUTL])
+                if Reactionpersecond[DRBTL,DRUTL]>=mxP:
+                    Rplaceofdr=drbelow[DRBTL]
+                    Rplaceofr=rtube[DRUTL]
+                    RNdr=DRBTL
+                    RNr=DRUTL
+    
+    
+    
+    
+    
+    
+    
