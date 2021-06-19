@@ -42,11 +42,11 @@ initialguess=np.concatenate([np.array([p.v_steadystate0]),p.T_steadystate0,p.Tb_
 beginparameter=0.3
 endparameter=3
 stepparameter=0.15
-#beginparameter2=0.5
-#endparameter2=1.5
-#stepparameter2=0.055
+beginparameter2=0.5
+endparameter2=1.5
+stepparameter2=0.055
 
-parameter_afkorting="solubility"
+parameter_afkorting="all"#"solubility"
 listnamev=['v_(%s_beginvalue=%.2f,end_value=%.2f,stepsize=%.2f).npy' %(parameter_afkorting,beginparameter,endparameter,stepparameter)] #
 listnameTn=['Tn_(%s_beginvalue=%.2f,end_value=%.2f,stepsize=%.2f).npy' %(parameter_afkorting,beginparameter,endparameter,stepparameter)]
 listnameTbn=['Tbn_(%s_beginvalue=%.2f,end_value=%.2f,stepsize=%.2f).npy' %(parameter_afkorting,beginparameter,endparameter,stepparameter)]
@@ -57,20 +57,20 @@ Tnsend=np.zeros((p.N,len(np.arange(beginparameter,endparameter,stepparameter))))
 Tnsbend=np.zeros((p.N,len(np.arange(beginparameter,endparameter,stepparameter))))
 ite=0
 paravary=np.arange(beginparameter,endparameter,stepparameter)
-#paravary2=-np.arange(-endparameter,-beginparameter,stepparameter)
-#paravary3=np.arange(beginparameter2,endparameter2,stepparameter2)
-variation_parameter="solubility of Sodium Molybdenum "
-parameter_symbol="solubility"
+paravary2=-np.arange(-endparameter,-beginparameter,stepparameter)
+paravary3=np.arange(beginparameter2,endparameter2,stepparameter2)
+variation_parameter="multiple parameters"#"solubility of Sodium Molybdenum "
+parameter_symbol="multiple parameters"#"solubility"
 #Darcytest=np.zeros(len(paravary))
 Reactiontest=np.zeros(len(paravary))
 for Par in paravary:
-    #Par2=paravary2[ite]
-    #Par3=paravary3[ite]
-    C_pfluid=  41875 # (J/(kg K)) specific heat capacity of fluid (now taken water at a pressure 10^5 Pa at 60 degrees)
-    rho_0= 983.23  # (kg/m^3) reference density of WATER in pipe at temperature T_0, taken at atmospheric pressure (10^5 Pa)
+    Par2=paravary2[ite]
+    Par3=paravary3[ite]
+    C_pfluid= Par*41875 # (J/(kg K)) specific heat capacity of fluid (now taken water at a pressure 10^5 Pa at 60 degrees)
+    rho_0= Par*983.23  # (kg/m^3) reference density of WATER in pipe at temperature T_0, taken at atmospheric pressure (10^5 Pa)
     T_0= 60+273.15 # reference temperature for fluid, now taken at 60 degrees
-    lambda_fluid= 0.6506 #0.665 W/(m K)   #thermal conductivity of reference fluid, WATER at 60 degrees
-    beta=4.57*10**-4  # (K**-1) Thermal expansion coefficient of WATER (data compagnion) (constant for determining density at different temperature)
+    lambda_fluid= Par*0.6506 #0.665 W/(m K)   #thermal conductivity of reference fluid, WATER at 60 degrees
+    beta=Par2*4.57*10**-4  # (K**-1) Thermal expansion coefficient of WATER (data compagnion) (constant for determining density at different temperature)
     mu_20=1.002*10**-3 #Pa s  dynamic viscosity of reference fluid, water, at 20 degrees
     a_fluid=lambda_fluid/(rho_0*C_pfluid)     #thermal diffusivity of the fluid, now estimated for water now
     
@@ -83,7 +83,7 @@ for Par in paravary:
         mu_rel=1+(A*m**0.5)+B*m  # see bron Viscosity of Aqueous Solutions of Sodium Chloride
                                 #A. A. Aleksandrov, E. V. Dzhuraeva, and V. F. Utenkov
         mu=mu_water*mu_rel
-        return mu 
+        return Par2*mu 
 
     "-----------------------Variables & Parameters----------------------------"
     '=====================changeble parameters========================'
@@ -117,7 +117,7 @@ for Par in paravary:
     #solution=36/1000 #mol/kg maximum oplosbaarheid of salt in water
     solution=0.84 #kg/L = 84 g/100ml from pubchem solubility for Sodium molybdate
     Molair_mass_mosalt=207.864601 *10**3 # kg/mol
-    MolMo_98=Par*solution/Molair_mass_mosalt #mol/L Mo98 in water
+    MolMo_98=solution/Molair_mass_mosalt #mol/L Mo98 in water
     Na=6.022045*10**23 # avogadro's number (6.022×1023 atoms= 1 mol)
     Sol_Mo98=Na*MolMo_98*10**3 # atoms/m^3 = Na*MolMo_98 atoms/L, max solution Mo98 in water
     #Sol_salt=Na*solution/rho_0 #atoms/m^3 maximum oplosbaarheid of salt in water
@@ -444,6 +444,34 @@ plt.plot(paravary,vnsend)
 plt.xlabel('Paramter variation of %s' %(parameter_symbol))
 plt.ylabel('velocity')
 plt.title('velocity at different values of the %s ' %(variation_parameter))
+
+
+# fig, ax = plt.subplots(constrained_layout=True)
+
+# ax.plot(paravary, vnsend)
+# ax.set_xlabel('Parameter variation of C_p, \lambda, \rho and /beta')
+# ax.set_ylabel('velocity')
+# ax.set_title('velocity at different values of the %s ' %(variation_parameter))
+
+# def par1(x):
+#     return -x+3.3
+
+    
+# secax = ax.secondary_xaxis('top', functions=(par1,par1))
+# secax.set_xlabel('Parameter variation of \mu')
+# plt.show()
+
+# fig, ax = plt.subplots(constrained_layout=True)
+# ax.imshow(Tnsend,extent=[paravary[0],paravary[-1],0,length],origin='lower',aspect='auto')
+# ax.set_xlabel('Parameter variation of specific heat capacity, density, \n thermal conductivity and thermal expansion coefficient')
+# ax.set_ylabel('l')
+# ax.set_title('temperature profile of the loop\n at different values of the %s ' %(variation_parameter))
+
+# def par1(x):
+#     return -x+3.3
+# secax = ax.secondary_xaxis('top', functions=(par1,par1))
+# secax.set_xlabel('Parameter variation of dynamic viscosity')
+# plt.show()
 
 
 
