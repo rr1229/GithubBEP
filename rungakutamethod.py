@@ -306,14 +306,15 @@ if True:
     
     
     #plot of end temperature of wall and fluid
+    lengthvector=np.linspace(0,p.length,p.N)
     fig,((ex1,ex2)) = plt.subplots(1,2)
     plt.suptitle('End result of Runga kutta method, v= %.3e' %(vend[steps-1]))
-    ex1.plot(Tend[:,steps-1])
+    ex1.plot(lengthvector,Tend[:,steps-1])
     ex1.set_title('Temperature of fluid')
     ex1.set_ylabel('$T$')
     ex1.set_xlabel('$l$')
 
-    ex2.plot(Tbend[:,steps-1])
+    ex2.plot(lengthvector,Tbend[:,steps-1])
     ex2.set_title('Temperature of wall')
     ex2.set_ylabel('$T_B$')
     ex2.set_xlabel('$l$')

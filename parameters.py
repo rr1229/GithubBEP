@@ -18,12 +18,12 @@ import matplotlib.pyplot as plt
 '=====================changeble parameters========================'
 N= 40 #number of segments, has to be multiple of 4
 anglepipe=5 * np.pi*2/360  # (radialen)  angle of horizontal pipes in system with horizontal, now 5 degrees 
-r= 15*10**-3#3*10**-3 #3*10**-3 (meters) radius of inner tube
-dr1= 20*10**-3#7*10**(-3)#7*10**-3  # (meters) thickness of wall of tube for part 1
-dr2= 20*10**-3#7*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 4
-dr3= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 3
-dr4= 1*10**-3 #1*10**-3 (meters) thickness of wall of tube for part 4
-deel=0.37 #where in the tube the smaller diameter will appear, works between 0.25 and 0.75
+r= 15*10**-3 #3*10**-3 # (meters) radius of inner tube
+dr1= 20*10**-3 # 7*10**-3 #(meters) thickness of wall of tube for part 1
+dr2= 20*10**-3 #7*10**-3#  (meters) thickness of wall of tube for part 4
+dr3= 1*10**-3 #1*10**-3 # (meters) thickness of wall of tube for part 3
+dr4= 1*10**-3 #1*10**-3 # (meters) thickness of wall of tube for part 4
+deel=0.37 #0.5#where in the tube the smaller diameter will appear, works between 0.25 and 0.75
 
 
 
