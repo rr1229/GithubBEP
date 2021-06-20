@@ -1,42 +1,19 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat May 15 16:23:30 2021
+Created on Sun Jun 20 15:36:18 2021
 
 @author: ronar
 """
+
 import parameters as p
 import numpy as np
 import matplotlib.pyplot as plt
 import fsolvenumerieekNieuw as fs
 from tqdm import tqdm 
 
-blocks=p.N #number of parts we use for numerical integration, would work best in multiples of 4
-
-#initial condition of Temperature:
+blocks=p.N 
 vo=fs.answer[0]
 To,Tbo=np.array_split(fs.answer[1:],2)
-# vo=0.0010461944706357197
-# To=np.array([325.10297393, 325.14567897, 325.18621626, 325.22469582,
-#        325.26122209, 325.29589421, 325.32880629, 325.36004766,
-#        325.38970312, 325.41785317, 326.388868  , 327.31859889,
-#        328.20878404, 329.06109018, 329.87711519, 330.65839084,
-#        331.40638538, 332.12250607, 332.80810163, 333.46446455,
-#        332.61074395, 331.79916799, 331.02759573, 330.29399865,
-#        329.5964546 , 328.93314206, 328.30233466, 327.70239603,
-#        327.131775  , 326.58900095, 326.41285568, 326.24228654,
-#        326.07711264, 325.91715904, 325.76225671, 325.61224231,
-#        325.466958  , 325.3262512 , 325.18997447, 325.05798528])
-
-# Tbo=np.array([325.85214267, 325.85681948, 325.86125857, 325.86547205,
-#        325.8694714 , 325.8732675 , 325.8768707 , 325.8802908 ,
-#        325.88353712, 325.8866185 , 342.558573  , 342.80082607,
-#        343.032481  , 343.25401174, 343.46586999, 343.66848637,
-#        343.86227151, 344.04761707, 344.22489665, 344.39446675,
-#        319.7886221 , 319.6100216 , 319.439269  , 319.27602511,
-#        319.1199654 , 318.97077937, 318.82816987, 318.69185258,
-#        318.56155538, 318.43701784, 323.76730879, 323.68049039,
-#        323.59634803, 323.51479868, 323.43576193, 323.35915991,
-#        323.28491716, 323.21296063, 323.14321953, 323.07562532])
 
 def h_BC(n,v,T,Tb,m):
     h_BC= ((1/p.h_wall(n))+(1/p.h_outside(n, v, T, Tb,m)))**-1 
@@ -61,10 +38,6 @@ def Ch_BC(n,l):
         hbcC2=h_BC(n,vo,To,Tbo,int(p.N-1))
     
     return hbcC2
-        
-        
-        
-        
 
 def drwall(i):
     if i<0.25*p.N:
@@ -125,9 +98,6 @@ def constantC(n,v,T,l):
     Cn=(-p.g*p.beta*np.sin(angle(l)))/(p.kw1+p.kw2+friction*p.length*((4*p.r)**-1))
     return Cn
 
-#def constant2C(n,v,T):                          Darcy friction is actually temperature and so space dependend!!!!
-#    Cn=(-p.g*p.beta*np.sin(p.angle[n]))/(p.kw1+p.kw2+darcyfrinction(v,T[n])*p.l*(p.r**-1))
-#    return Cn
 
 
 def T_l(l,v,Told):
@@ -267,8 +237,8 @@ def velocity(v_i,Told):
     # values4=np.linspace(0.75*p.length,p.length-step4,round(blocks*0.25))
     
     values1=np.linspace(0+0.5*step1,0.25*p.length-0.5*step1,round(blocks*0.25))
-    values2=np.linspace(0.25*p.length+0.5*step2,p.deel*p.length-0.5*step2,round(blocks*0.25))
-    values3=np.linspace(p.deel*p.length+0.5*step3,0.75*p.length-0.5*step3,round(blocks*0.25))
+    values2=np.linspace(0.25*p.length+0.5*step2,p.deel*p.length-0.1*step2,round(blocks*0.25))
+    values3=np.linspace(p.deel*p.length+0.1*step3,0.75*p.length-0.5*step3,round(blocks*0.25))
     values4=np.linspace(0.75*p.length+0.5*step4,p.length-0.5*step4,round(blocks*0.25))
     #Lege vectoren maken voor het berekenen voor elke Temperatuur in de verschillende delen 
     T_l_values1=np.zeros(round(blocks*0.25))
@@ -450,6 +420,15 @@ kx2.set_xlabel('$l$')
 kx2.set_xlim(0, p.length)
 
 
+
+fig,((ex1)) = plt.subplots(1,1)
+plt.suptitle('End result of Newton Raphson method and the analytical method, \n with NR: v= %.3e and Analytisch: v=%.3e' %(vo,Velocityend1[-1]) )
+ex1.plot(lengthvector,To)
+ex1.plot(length,Tnew1)
+ex1.set_title('Temperature of fluid')
+ex1.set_ylabel('$T$')
+ex1.set_xlabel('$l$')
+ex1.legend(['Newton Rahpson method','Analytical method'])
 
 
 
