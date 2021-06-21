@@ -9,8 +9,8 @@ import parameters as p
 import functions as f
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-#import rungakutamethod as RK4
-import fsolvenumerieekNieuw as solve
+import rungakutamethod as RK4
+#import fsolvenumerieekNieuw as solve
 
 'comparing the different methods'
 # fig,((ex1,ex2)) = plt.subplots(1,2)
@@ -45,14 +45,14 @@ if False:
     fig,((dx1,dx2),(dx3,dx4)) = plt.subplots(2,2)
     plt.suptitle(' plots of mean Temperatures of wall in different cilinders, with different starting temperatures') 
     fig,((nx1)) = plt.subplots(1,1)
-    vvari=0.00000001 #np.arange(0.02,0.201,0.02)
-    T0=np.arange(10+273.15,70+273.15,10) #p.T0
-    Tb0=np.arange(30+273.15,90+273.15,10) #p.Tb0
-    k=0
-    for T in T0:
-        T_0=np.ones(p.N)*T
-        Tb_0=np.ones(p.N)*Tb0[k]
-        RK=RK4.RK4solver(vvari, T_0, Tb_0)
+    vvari=np.arange(0.001,0.021,0.002)#np.arange(0.0001,0.0011,0.0001)    #0.00000001 #
+    T0=p.T0         #  np.arange(10+273.15,70+273.15,10) #
+    Tb0=p.Tb0       #np.arange(30+273.15,90+273.15,10) #
+    k=0        
+    for vvari1 in vvari:
+        T_0=np.ones(p.N)*T0
+        Tb_0=np.ones(p.N)*Tb0
+        RK=RK4.RK4solver(vvari1, T_0, Tb_0)
         vend=RK[0]
         Tend=RK[1]
         Tbend=RK[2]
@@ -103,8 +103,10 @@ if False:
     nx1.set_xlabel('t (s)')  
     legend=[]
     z=0
-    for Tint in T0:
-        legend.append('T_0 = %.3f and Tb_0= %.3f ' %(Tint,Tb0[z]))
+    for vleg in vvari:
+    #for Tint in T0:
+        legend.append('v_0 = %.3f' %(vleg))
+        #legend.append('T_0 = %.3f and Tb_0= %.3f ' %(Tint,Tb0[z]))
         z=z+1
     nx1.legend(legend)
         

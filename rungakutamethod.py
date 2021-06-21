@@ -63,13 +63,14 @@ def rungakutta(R,h):
     RK=[v,T,Tb,dvdt,dTndt,dTbdt]
     return RK
 
-#2def RK4solver(v0,T0,Tb0):
+#steps=5000
+#def RK4solver(v0,T0,Tb0):
 initial=[p.v0,p.T0,p.Tb0]
-#initial=[v0,T0,Tb0]
+#    initial=[v0,T0,Tb0]
 t=0
-h=0.5
+h=3 #0.5
 hmax=2*h
-steps=5000#400000
+steps=5*967 #1000#5000#400000
 RK=initial
 
 vend=np.zeros(steps+1)
@@ -102,8 +103,8 @@ for tn in tqdm(np.arange(0,steps,1)):
     dvdtend[tn+1]=RK[3]
     dTndtend[:,tn+1]=RK[4]
     dTbdtend[:,tn+1]=RK[5]
-    
-#    return vend, Tend, Tbend
+
+    #return vend, Tend, Tbend, tend
     
     
     # Tdiffmax=max(abs(Tend[:,tn]-Tend[:,tn+1]))
@@ -173,7 +174,8 @@ for tn in tqdm(np.arange(0,steps,1)):
 if True:
 #if False:
     plt.plot(tend,vend)    
-    
+    #tend3=tend
+    #vend3=vend
     #'plot of velocity'
     plt.plot(tend,vend) 
     plt.title('velocity of fluid')
@@ -238,29 +240,31 @@ if True:
     TendC2=np.zeros(int(steps+1))
     TendC3=np.zeros(int(steps+1))
     TendC4=np.zeros(int(steps+1))
+    #Tendall3=np.zeros((int(steps+1)))
     for i in np.arange(0,steps+1,1):
         TendC1[i]=np.mean((Tend[:,i])[0:int(p.N/4)])
         TendC2[i]=np.mean((Tend[:,i])[int(p.N/4):int(p.N/2)])
         TendC3[i]=np.mean((Tend[:,i])[int(p.N/2):int(3*p.N/4)])
         TendC4[i]=np.mean((Tend[:,i])[int(3*p.N/4):int(p.N-1)])
+     #   Tendall3[i]=np.mean((Tend[:,i])[0:int(p.N-1)])
 
         
-    cx1.plot(TendC1)
+    cx1.plot(tend,TendC1)
     cx1.title.set_text('cilinder 1')
     cx1.set_ylabel('T (k)')
     cx1.set_xlabel('t (s)')
     
-    cx2.plot(TendC2)
+    cx2.plot(tend,TendC2)
     cx2.title.set_text('cilinder 2')
     cx2.set_ylabel('T (k)')
     cx2.set_xlabel('t (s)')
 
-    cx3.plot(TendC3)
+    cx3.plot(tend,TendC3)
     cx3.title.set_text('cilinder 3')
     cx3.set_ylabel('T (k)')
     cx3.set_xlabel('t (s)')
     
-    cx4.plot(TendC4)
+    cx4.plot(tend,TendC4)
     cx4.title.set_text('cilinder 4')
     cx4.set_ylabel('T (k)')
     cx4.set_xlabel('t (s)')
@@ -275,11 +279,13 @@ if True:
     TbendC2=np.zeros(int(steps+1))
     TbendC3=np.zeros(int(steps+1))
     TbendC4=np.zeros(int(steps+1))
+    #Tbendall3=np.zeros(int(steps+1))
     for i in np.arange(0,steps+1,1):
         TbendC1[i]=np.mean((Tbend[:,i])[0:int(p.N/4)])
         TbendC2[i]=np.mean((Tbend[:,i])[int(p.N/4):int(p.N/2)])
         TbendC3[i]=np.mean((Tbend[:,i])[int(p.N/2):int(3*p.N/4)])
         TbendC4[i]=np.mean((Tbend[:,i])[int(3*p.N/4):int(p.N-1)])
+     #   Tbendall3[i]=np.mean((Tbend[:,i])[0:int(p.N-1)])
     
     dx1.plot(tend,TbendC1)
     dx1.title.set_text('cilinder 1')
@@ -320,9 +326,37 @@ if True:
     ex2.set_xlabel('$l$')
     
     
+
+    # fig,((te1,te2,te3)) = plt.subplots(1,3)
+    # plt.suptitle('Runga kutta method with different time steps')
+    # te1.plot(tend2_9,vend2_9)
+    # tb1.plot(tend3,vend3)
+    # te1.set_title('velocity, with $\Delta t = 2.9$s')
+    # tb1.set_title('velocity, with $\Delta t = 3$s')
+    # te1.set_ylabel('$v$')
+    # te1.set_xlabel('$t$')
+    # tb1.set_ylabel('$v$')
+    # tb1.set_xlabel('$t$')
     
     
+    # te2.plot(tend2_9,Tendall2_9)
+    # tb2.plot(tend3,Tendall3)
+    # te2.set_title('mean temperature of the fluid, with $\Delta t = 2.9$s')
+    # tb2.set_title('mean temperature of the fluid, with $\Delta t = 3$s')
+    # te2.set_ylabel('$T$')
+    # te2.set_xlabel('$t$')
+    # tb2.set_ylabel('$T$')
+    # tb2.set_xlabel('$t$')
     
+    
+    # te3.plot(tend2_9,Tbendall2_9)
+    # tb3.plot(tend3,Tbendall3)
+    # te3.set_title('mean temperature of the wall, with $\Delta t = 2.9$s')
+    # tb3.set_title('mean temperature of the wall, with $\Delta t = 3$s')
+    # te3.set_ylabel('$T$')
+    # te3.set_xlabel('$t$')
+    # tb3.set_ylabel('$T$')
+    # tb3.set_xlabel('$t$')
     
     
     
