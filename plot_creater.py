@@ -45,7 +45,7 @@ if False:
     fig,((dx1,dx2),(dx3,dx4)) = plt.subplots(2,2)
     plt.suptitle(' plots of mean Temperatures of wall in different cilinders, with different starting temperatures') 
     fig,((nx1)) = plt.subplots(1,1)
-    vvari=np.arange(0.001,0.021,0.002)#np.arange(0.0001,0.0011,0.0001)    #0.00000001 #
+    vvari=np.arange(0.001,0.021,0.002)#np.arange(0.0001,0.0011,0.0001)   
     T0=p.T0         #  np.arange(10+273.15,70+273.15,10) #
     Tb0=p.Tb0       #np.arange(30+273.15,90+273.15,10) #
     k=0        

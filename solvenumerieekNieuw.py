@@ -16,9 +16,7 @@ def darcyfriction(v,T,Tb=0):
     Re=p.Reynolds(v, T)
     a=1/(1+((Re/2712)**8.4))
     b=1/(1+((Re/(150*2*p.r/p.eff))**1.8))
-    #df=64/Re
     df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(3.41*2*p.r/p.eff))**(2*(a-1)*(1-b)))
-    #df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(6.82*2*p.r/p.eff))**(2*(a-1)*(1-b)))
     f=np.sum(df)
     if v>0:
         f1=f
@@ -30,7 +28,6 @@ def gravity(v,T):
     grav=np.zeros(p.N)
     for n in np.arange(0,p.N,1):
         grav[n]=(p.rho_0-p.rho_0*p.beta*(T[n]-p.T_0))*np.sin(p.angle[n])        
-    #grav1=np.sum((p.rho_0-p.rho_0*p.beta*(T-p.T_0))*np.sin(p.angle))
     if v>0:
         grav1=sum(grav)
     else:
@@ -79,9 +76,6 @@ def Tfluidzero(v,T,Tb):
         for n in np.arange(0,p.N,1):
             if n < p.N-1:
                 tfluidzero[n]=PhiAB[n]+v*Constatns*(T[n]-T[n+1])
-            #tfluidzero[n]=(-2*p.h_AB(n, v, T[n])*(T[n]-Tb[n])/(p.r*p.rho_0*p.C_pfluid))-(p.N*(T[n]-T[n-1])*v/p.length)
-    #tfluidzero[0]=(-2*p.h_AB(n, v, T[0])*(T[0]-Tb[0])/(p.r*p.rho_0*p.C_pfluid))-(p.N*(T[0]-T[p.N-1])*v/p.length)
-        #tfluidzero[n]=PhiAB[n]+v*p.rho_0*p.C_pfluid*np.pi*p.r**2*(T[n]-T[n-1])
     return tfluidzero
 
 def velocityzero(v,T,Tb):
@@ -90,17 +84,12 @@ def velocityzero(v,T,Tb):
         Velocityzero=-f_D*(1/(4*p.r))*v**2 - ((p.kw1+p.kw2)*v**2)/p.length + (p.g/(p.rho_0*p.N))*gravity(v,T)
     else:
         Velocityzero=-f_D*(1/(4*p.r))*v**2 + ((p.kw1+p.kw2)*v**2)/p.length + (p.g/(p.rho_0*p.N))*gravity(v,T)
-    #Velocityzero=-2*f_D*v**2/p.r + (p.g/(p.rho_0*p.N))*gravity(v,T) - ((p.kw1+p.kw2)*v**2)/p.length 
-    #f_D=darcyfriction(v, T)
-    #Velocityzero=-2*f_D*(1/p.r)*v**2 + (p.g/(p.rho_0))*gravity(v,T)
     return Velocityzero
 
 def system(U):
     v=U[0]
     T,Tb=np.array_split(U[1:],2)
-    
-    #print('v=', v ,'\n T=',T, '\n Tb=',Tb)
-    
+
     vzero=velocityzero(v, T, Tb)
     Tnzero=Tfluidzero(v, T, Tb)
     Tbzero=Twallzero(v, T, Tb)
@@ -116,7 +105,7 @@ def split(U):
 
 
 initialguess=np.concatenate([np.array([p.v_steadystate0]),p.T_steadystate0,p.Tb_steadystate0])
-#initialguess=np.concatenate([np.array([vend[len(vend)-1]]),p.T_steadystate0,p.Tb_steadystate0])
+
 
 if True:
     #answer=optimize.newton_krylov(system,initialguess) # doet het nu niet 
@@ -137,8 +126,7 @@ lengthvector=np.linspace(0,p.length,p.N)
 fig, (ax1,ax2) = plt.subplots(1,2)
 plt.suptitle('Temperature')
 ax1.plot(lengthvector,T,'k')
-#ax1.plot(p.T_steadystate0,'r')
-#ax1.plot(Trk,'b')
+
 ax1.set_xlabel('$l$')
 ax1.set_ylabel('$T$')
 ax1.set_title('Temperature of fluid')

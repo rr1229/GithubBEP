@@ -39,7 +39,6 @@ def rungakutta(R,h):
         k1Tb[i]=h*f.f3Tb(T,i,Tb,v)
         dTndt[i]=f.f2Tn(v, T, i, Tb)
         dTbdt[i]=f.f3Tb(T,i,Tb, v)
-    #print(dTndt, dTbdt)
         
     k2v=h*f.f1v(v+0.5*k1v,T+0.5*k1Tn)
     for i in np.arange(0,p.N,1):
@@ -57,7 +56,6 @@ def rungakutta(R,h):
         k4Tb[i]=h*f.f3Tb(T+k3Tn,i,Tb+k3Tb, v+k3v)
     
     v=v+(1/6)*(k1v+2*k2v+2*k3v+k4v)
-    #print(v)
     T=T+(1/6)*(k1Tn+2*k2Tn+2*k3Tn+k4Tn)
     Tb=Tb+(1/6)*(k1Tb+2*k2Tb+2*k3Tb+k4Tb)
     RK=[v,T,Tb,dvdt,dTndt,dTbdt]
@@ -68,9 +66,9 @@ def rungakutta(R,h):
 initial=[p.v0,p.T0,p.Tb0]
 #    initial=[v0,T0,Tb0]
 t=0
-h=3 #0.5
+h=0.5
 hmax=2*h
-steps=5*967 #1000#5000#400000
+steps=5000#400000
 RK=initial
 
 vend=np.zeros(steps+1)
@@ -84,11 +82,6 @@ Tbend[:,0]=RK[2]
 dvdtend=np.zeros(steps+1)
 dTndtend=np.zeros([p.N,steps+1])
 dTbdtend=np.zeros([p.N,steps+1])
-
-# for adaptive runga kutta:
-#from Haffmans code:
- # running 0.001 degrees error per second gives 1 error per 1000 seconds
-delta = 0.11#0.00001 # target accuracy in degrees celcius per second    # target accuracy in m/s per second
 
 
 for tn in tqdm(np.arange(0,steps,1)):
@@ -106,69 +99,7 @@ for tn in tqdm(np.arange(0,steps,1)):
 
     #return vend, Tend, Tbend, tend
     
-    
-    # Tdiffmax=max(abs(Tend[:,tn]-Tend[:,tn+1]))
-    # Tbdiffmax=max(abs(Tbend[:,tn]-Tbend[:,tn+1]))
-    # vdiff=abs(vend[tn]-vend[tn+1])
-    # maxdifference=max(Tdiffmax,Tbdiffmax,vdiff)
-    # if tn>500:
-    #     hnew=h*(30*delta*h/maxdifference)**(1/4)
-    #     if hnew>hmax:
-    #         h=hmax
-    #         if t>100:
-    #             h=2*hmax
-    #     else:
-    #         h=hnew 
-        #print(h)
-    #if t>0.5:
-    #    h=0.00001
-    #if t>0.5:
-    #    h=0.001
-        
-        
 
-# def k1f1(h,v,T):
-#     k=h*f.f1v(v,T)
-#     return k
-
-# def k1f2(h,v,T,n,Tb):
-#     k=h*f.f2Tn(v,T,n,Tb)
-#     return k
-
-# def k1f3(h,Tb,n,T):
-#     k=h*f.f3Tb(T,n,Tb)
-#     return k
-
-# T=p.T0
-# Tb=p.Tb0
-# v=p.v0
-# T1=np.zeros(p.N)
-# Tb1=np.zeros(p.N)
-# t=0
-
-# vend=np.zeros(10001)
-# vend[0]=v
-# tend=np.zeros(10001)
-# tend[0]=t
-# Tend=np.zeros([p.N,10001])
-# Tbend=np.zeros([p.N,10001])
-# Tend[:,0]=p.T0
-# Tbend[:,0]=p.Tb0
-
-# for tn in np.arange(0,10000,1):
-#     v1=v+0.5*k1f1(h,v,T)
-#     for i in np.arange(0,p.N,1):
-#         T1[i]=T[i]+0.5*k1f2(h, v, T, i, Tb)
-#         Tb1[i]=Tb[i]+0.5*k1f3(h, Tb, i, T)
-#     Tend[:,tn+1]=T1
-#     Tbend[:,tn+1]=Tb1
-#     T=T1
-#     Tb=Tb1
-#     vend[tn+1]=v1
-#     v=v1
-#     t=tn*h+t
-#     tend[tn+1]=t
-    
 
 
 if True:

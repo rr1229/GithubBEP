@@ -7,7 +7,7 @@ Created on Sat May 15 16:23:30 2021
 import parameters as p
 import numpy as np
 import matplotlib.pyplot as plt
-import fsolvenumerieekNieuw as fs
+import solvenumerieekNieuw as fs
 from tqdm import tqdm 
 
 blocks=p.N #number of parts we use for numerical integration, would work best in multiples of 4
@@ -97,7 +97,7 @@ def darcyfriction(v,T):
     a=1/(1+((Re/2712)**8.4))
     b=1/(1+((Re/(150*2*p.r/p.eff))**1.8))
     df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(3.41*2*p.r/p.eff))**(2*(a-1)*(1-b)))
-    #df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(6.82*2*p.r/p.eff))**(2*(a-1)*(1-b)))
+
     f=np.sum(df)
     return f
         
@@ -372,7 +372,7 @@ T_0=To
 
 '''berekenen van initial snelheid aan de hand van the initial condition van de temperature. '''
 #deel2=((p.deel-0.25)/2)+0.25
-#C1=constantC(round(p.N*0.10),vo,T_0,p.length*0.1) #!!!!!!!!!! hier nog even naar de velocity kijken 
+#C1=constantC(round(p.N*0.10),vo,T_0,p.length*0.1) 
 #C2=constantC(round(p.N*deel2),vo,T_0,p.length*0.3)
 #C3=constantC(round(p.N*0.60),vo,T_0,p.length*0.6)
 #C4=constantC(round(p.N*0.90),vo,T_0,p.length*0.9)

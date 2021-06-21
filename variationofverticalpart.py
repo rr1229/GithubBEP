@@ -18,7 +18,6 @@ def system(U):
     v=U[0]
     T,Tb=np.array_split(U[1:],2)
     
-    #print('v=', v ,'\n T=',T, '\n Tb=',Tb)
     
     vzero=velocityzero(v, T, Tb)
     Tnzero=Tfluidzero(v, T, Tb)
@@ -116,15 +115,17 @@ for thick1 in drbelow:
         flux=3.5*10**16 # m^-2 s^-1 neutron flux in reactor, form Laurens haffmans
         
         '......parameters of fluid.......'
-        #C_pfluid=3327# (J/(kg C)) specific heat capacity of fluid now taken for NaCl solution at 52 degrees
-        #rho_0=1147 #(kg/m^3) reference density of NaCl solution at 52 C
-        #T_0=52+273.15 # K reference temp. for NaCl solutuion taken 52 degrees
-        #lambda_fluid=0.530 #(W/(m C)) thermal conductivity of NaCl solution at 52 degrees
-        C_pfluid= 41875 # (J/(kg K)) specific heat capacity of fluid (now taken water at a pressure 10^5 Pa at 60 degrees)
-        rho_0= 983.23  # (kg/m^3) reference density of WATER in pipe at temperature T_0, taken at atmospheric pressure (10^5 Pa)
-        T_0= 60+273.15 # reference temperature for fluid, now taken at 60 degrees
-        lambda_fluid=0.6506 #0.665 W/(m K)   #thermal conductivity of reference fluid, WATER at 60 degrees
-        beta= 4.57*10**-4  # (K**-1) ORDERGROOTESCHATTING Thermal expansion coefficient of WATER (data compagnion) (constant for determining density at different temperature)
+        C_pfluid=3327# (J/(kg C)) specific heat capacity of fluid now taken for NaCl solution at 52 degrees
+        rho_0=1147 #(kg/m^3) reference density of NaCl solution at 52 C
+        T_0=52+273.15 # K reference temp. for NaCl solutuion taken 52 degrees
+        lambda_fluid=0.530 #(W/(m C)) thermal conductivity of NaCl solution at 52 degrees
+        
+        # C_pfluid= 41875 # (J/(kg K)) specific heat capacity of fluid (now taken water at a pressure 10^5 Pa at 60 degrees)
+        # rho_0= 983.23  # (kg/m^3) reference density of WATER in pipe at temperature T_0, taken at atmospheric pressure (10^5 Pa)
+        # T_0= 60+273.15 # reference temperature for fluid, now taken at 60 degrees
+        # lambda_fluid=0.6506 #0.665 W/(m K)   #thermal conductivity of reference fluid, WATER at 60 degrees
+        
+        beta= 4.57*10**-4  # (K**-1)Thermal expansion coefficient of WATER (constant for determining density at different temperature)
         mu_20=1.002*10**-3 #Pa s  dynamic viscosity of reference fluid, water, at 20 degrees
         a_fluid=lambda_fluid/(rho_0*C_pfluid)     #thermal diffusivity of the fluid, now estimated for water now
         
@@ -150,28 +151,28 @@ for thick1 in drbelow:
         Na=6.022045*10**23 # avogadro's number (6.022×1023 atoms= 1 mol)
         Sol_Mo98=Na*MolMo_98*10**3 # atoms/m^3 = Na*MolMo_98 atoms/L, max solution Mo98 in water
         #Sol_salt=Na*solution/rho_0 #atoms/m^3 maximum oplosbaarheid of salt in water
-        Cross_section_b=130*10**-3 #b (barn=1^-28) neutron cross section of molybdenum98   van bron: Can Enriched Molybdenum-98 Replace Enriched Uranium? Mushtaq Ahmad 
+        Cross_section_b=130*10**-3 #b (barn=1^-28) neutron cross section of molybdenum98  
         Cross_section=Cross_section_b *10**-28 #m^-2
         Molair_Mo99=98.907707 #g/mol
         
         
         '..........parameters of wall.........'
-        C_pwall= 285 # (J/(kg K)) specific heat capacity of wall (taken from Haffmans)
-        rho_wall= 6.55*10**3 # (kg/m^3) density of wall, taken from Haffmans
-        u= 300    # (W/kg) production term of gamma- heating by wall, Taken from Haffmans
+        C_pwall= 285 # (J/(kg K)) specific heat capacity of wall
+        rho_wall= 6.55*10**3 # (kg/m^3) density of wall
+        u= 300    # (W/kg) production term of gamma- heating by wall
         lambda_wall=21.5 #thermal conductivity of wall
         
         '..........parameters of surrounding water..........'
         T_c= 40+273.15   # temperature outside water in Kelvin
         mu_40=0.653*10**-3 #Pa s  dynamic viscosity of surrounding water at temperature 40 degrees
         rho_water=992.25 #kg/m^3  density of surrounding water a temperature 40 degrees
-        lambda_water= 0.627 # W/mK aprosimated thermal conductivity of water at 40 degrees (from data companion)
+        lambda_water= 0.627 # W/mK aprosimated thermal conductivity of water at 40 degrees
         Cp_water=4.1816*10**3 # J/(kg K) specific heat of water at temperature 40 degrees
         nu_water=mu_40/rho_water
         a_water=lambda_water/(rho_water*Cp_water)
         
         '..........Geometrie.............' 
-        Ltube=140*10**-3 #width of outer tube in reactor, from Laurens haffmans
+        Ltube=140*10**-3 #width of outer tube in reactor
         length=(4*(1+np.sin(anglepipe))**-1)*(Ltube-dr1-dr3-2*r) #hier gaan we ervan uit dat in de 1e buis de dikte altijd dr1 is en in de 3e buis altijd dr2
         dr=np.zeros(N)
         for i in np.arange(0,N,1):
@@ -193,7 +194,6 @@ for thick1 in drbelow:
         
         kw1=1.30   # pressure loss term for bend 1, for now a schatting from a sharp bend
         kw2=1.30   # pressure loss term for bend 2, for now a schatting from a sharp bend
-        f= 0.2#0.05#0.2  #friction term, ordergroote
         
         angle=np.zeros(N)
         for i in np.arange(0,N,1):
@@ -286,13 +286,9 @@ for thick1 in drbelow:
                     h2=3.66*lambda_fluid/(2*r)
                     a=(h2-h1)/0.05
                     h=a*(Gz-0.05)+h1
-                    #h=270   #approximation for this regime
-                    #print('error in creation hfluid: Re= %.3e , Gz= %.3e and Pr= %.3e' %(Re, Gz, Pr))
-                
             return h
         
         def h_outside(n,v,T,Tb,m):
-            #Re=Reynolds(v, T[n])
             Gr=Grashof(m,Tb)
             Pr=nu_water/a_water
             Ra=Gr*Pr
@@ -301,13 +297,8 @@ for thick1 in drbelow:
                 Nu_ans2=(4/35)* ((272+315*Pr)/(64+63*Pr))*(length/(4*2*(r+dr[n])))
                 Nu=Nu_ans1+Nu_ans2
                 
-                if Gr<10**8 and Ra>10**4 and Ra<10**9: #:#Nureth Lin Xiana, b, Guangming Jianga, b, Hongxing Yua, b
-                    Nu=0.48*Ra**0.25 #!!!!!!!!!!!!!hier nog even goed naar kijken!!!
-                    
-                #elif Gr>4*10**9 and Ra<10**11 and Ra>10**10:# :     #komt niet in deze region
-                #    Nu=0.148*Ra**0.333
-                    
-                    #print('value Gr is smaller than 10^8, so falls in wrong regime Gr= %.3e' %(Gr))
+                if Gr<10**8 and Ra>10**4 and Ra<10**9: 
+                    Nu=0.48*Ra**0.25 
                 h_c=Nu*lambda_water/(length/4)
             
             elif 0<=n<N/4 or N/2<=n<3*N/4: #horizontal pipe
@@ -331,24 +322,12 @@ for thick1 in drbelow:
         def h_BC(n,v,T,Tb):
             h_BC= ((1/h_wall(n))+(1/h_outside(n, v, T, Tb, n)))**-1 
             return h_BC
-        
-        
-    
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
         
         def gravity(v,T):
             grav=np.zeros(p.N)
             for n in np.arange(0,p.N,1):
                 grav[n]=(rho_0-rho_0*beta*(T[n]-p.T_0))*np.sin(angle[n])        
-            #grav1=np.sum((p.rho_0-p.rho_0*p.beta*(T-p.T_0))*np.sin(p.angle))
             if v>0:
                 grav1=sum(grav)
             else:
@@ -360,9 +339,7 @@ for thick1 in drbelow:
             Re=p.Reynolds(v, T)
             a=1/(1+((Re/2712)**8.4))
             b=1/(1+((Re/(150*2*r/p.eff))**1.8))
-            #df=64/Re
             df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(3.41*2*r/p.eff))**(2*(a-1)*(1-b)))
-            #df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(6.82*2*p.r/p.eff))**(2*(a-1)*(1-b)))
             f=np.sum(df)
             if v>0:
                 f1=f

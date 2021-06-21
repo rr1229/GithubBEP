@@ -34,15 +34,17 @@ g=9.81  #gravitational accelaration in the netherlands
 flux=3.5*10**16 # m^-2 s^-1 neutron flux in reactor, form Laurens haffmans
 
 '......parameters of fluid.......'
-#C_pfluid=3327# (J/(kg C)) specific heat capacity of fluid now taken for NaCl solution at 52 degrees
-#rho_0=1147 #(kg/m^3) reference density of NaCl solution at 52 C
-#T_0=52+273.15 # K reference temp. for NaCl solutuion taken 52 degrees
-#lambda_fluid=0.530 #(W/(m C)) thermal conductivity of NaCl solution at 52 degrees
-C_pfluid= 41875 # (J/(kg K)) specific heat capacity of fluid (now taken water at a pressure 10^5 Pa at 60 degrees)
-rho_0= 983.23  # (kg/m^3) reference density of WATER in pipe at temperature T_0, taken at atmospheric pressure (10^5 Pa)
-T_0= 60+273.15 # reference temperature for fluid, now taken at 60 degrees
-lambda_fluid=0.6506 #0.665 W/(m K)   #thermal conductivity of reference fluid, WATER at 60 degrees
-beta= 4.57*10**-4  # (K**-1) ORDERGROOTESCHATTING Thermal expansion coefficient of WATER (data compagnion) (constant for determining density at different temperature)
+C_pfluid=3327# (J/(kg C)) specific heat capacity of fluid now taken for NaCl solution at 52 degrees
+rho_0=1147 #(kg/m^3) reference density of NaCl solution at 52 C
+T_0=52+273.15 # K reference temp. for NaCl solutuion taken 52 degrees
+lambda_fluid=0.530 #(W/(m C)) thermal conductivity of NaCl solution at 52 degrees
+
+# C_pfluid= 41875 # (J/(kg K)) specific heat capacity of fluid (now taken water at a pressure 10^5 Pa at 60 degrees)
+# rho_0= 983.23  # (kg/m^3) reference density of WATER in pipe at temperature T_0, taken at atmospheric pressure (10^5 Pa)
+# T_0= 60+273.15 # reference temperature for fluid, now taken at 60 degrees
+# lambda_fluid=0.6506 #0.665 W/(m K)   #thermal conductivity of reference fluid, WATER at 60 degrees
+
+beta= 4.57*10**-4  # (K**-1) Thermal expansion coefficient of WATER 
 mu_20=1.002*10**-3 #Pa s  dynamic viscosity of reference fluid, water, at 20 degrees
 a_fluid=lambda_fluid/(rho_0*C_pfluid)     #thermal diffusivity of the fluid, now estimated for water now
 
@@ -68,28 +70,28 @@ MolMo_98=solution/Molair_mass_mosalt #mol/L Mo98 in water
 Na=6.022045*10**23 # avogadro's number (6.022×1023 atoms= 1 mol)
 Sol_Mo98=Na*MolMo_98*10**3 # atoms/m^3 = Na*MolMo_98 atoms/L, max solution Mo98 in water
 Sol_salt=Na*solution/rho_0 #atoms/m^3 maximum oplosbaarheid of salt in water
-Cross_section_b=130*10**-3 #b (barn=1^-28) neutron cross section of molybdenum98   van bron: Can Enriched Molybdenum-98 Replace Enriched Uranium? Mushtaq Ahmad 
+Cross_section_b=130*10**-3 #b (barn=1^-28) neutron cross section of molybdenum98   
 Cross_section=Cross_section_b *10**-28 #m^-2
 Molair_Mo99=98.907707 #g/mol
 
 
 '..........parameters of wall.........'
-C_pwall= 285 # (J/(kg K)) specific heat capacity of wall (taken from Haffmans)
-rho_wall= 6.55*10**3 # (kg/m^3) density of wall, taken from Haffmans
-u= 300    # (W/kg) production term of gamma- heating by wall, Taken from Haffmans
+C_pwall= 285 # (J/(kg K)) specific heat capacity of wall 
+rho_wall= 6.55*10**3 # (kg/m^3) density of wall
+u= 300    # (W/kg) production term of gamma- heating by wall
 lambda_wall=21.5 #thermal conductivity of wall
 
 '..........parameters of surrounding water..........'
 T_c= 40+273.15   # temperature outside water in Kelvin
 mu_40=0.653*10**-3 #Pa s  dynamic viscosity of surrounding water at temperature 40 degrees
 rho_water=992.25 #kg/m^3  density of surrounding water a temperature 40 degrees
-lambda_water= 0.627 # W/mK aprosimated thermal conductivity of water at 40 degrees (from data companion)
+lambda_water= 0.627 # W/mK aprosimated thermal conductivity of water at 40 degrees 
 Cp_water=4.1816*10**3 # J/(kg K) specific heat of water at temperature 40 degrees
 nu_water=mu_40/rho_water
 a_water=lambda_water/(rho_water*Cp_water)
 
 '..........Geometrie.............' 
-Ltube=140*10**-3 #width of outer tube in reactor, from Laurens haffmans
+Ltube=140*10**-3 #width of outer tube in reactor
 length=(4*(1+np.sin(anglepipe))**-1)*(Ltube-dr1-dr3-2*r) #hier gaan we ervan uit dat in de 1e buis de dikte altijd dr1 is en in de 3e buis altijd dr2
 dr=np.zeros(N)
 for i in np.arange(0,N,1):
@@ -111,7 +113,7 @@ Opp_wallAB=(length/N)*r*2*np.pi # area of inner wall of segment of system
 
 kw1=1.30   # pressure loss term for bend 1, for now a schatting from a sharp bend
 kw2=1.30   # pressure loss term for bend 2, for now a schatting from a sharp bend
-f= 0.2#0.05#0.2  #friction term, ordergroote
+
 
 angle=np.zeros(N)
 for i in np.arange(0,N,1):
@@ -134,14 +136,6 @@ for i in np.arange(0,N,1):
 Vwall=np.zeros(N)
 for i in np.arange(0,N,1):# volume of wall of segment of system 
     Vwall[i]=(length/N)*np.pi*((r+dr[i])**2-r**2)
-
-#h_A= 382.7  #ORDERGROOTESHCATTING # heat transfer coefficient of fluid
-#h_B= 13115  #ORDERGROOTESHCATTING    # heat transfer coefficient of wall
-#h_C= 382.7  #ORDERGROOTESHCATTING   # heat transfer coefficient of water
-
-#h_AB= ((1/h_A)+(1/h_B))**-1  # heat transfer coefficient of fluid to wall
-#h_BC= ((1/h_B)+(1/h_C))**-1  # heat transfer coefficient of wall to water
-
 
 
 '____________heat producion in pipe___________'
@@ -211,13 +205,10 @@ def h_fluid(v,T):
             h2=3.66*lambda_fluid/(2*r)
             a=(h2-h1)/0.05
             h=a*(Gz-0.05)+h1
-            #h=270   #approximation for this regime
-            #print('error in creation hfluid: Re= %.3e , Gz= %.3e and Pr= %.3e' %(Re, Gz, Pr))
-        
+            
     return h
 
 def h_outside(n,v,T,Tb,m):
-    #Re=Reynolds(v, T[n])
     Gr=Grashof(m,Tb)
     Pr=nu_water/a_water
     Ra=Gr*Pr
@@ -226,13 +217,9 @@ def h_outside(n,v,T,Tb,m):
         Nu_ans2=(4/35)* ((272+315*Pr)/(64+63*Pr))*(length/(4*2*(r+dr[n])))
         Nu=Nu_ans1+Nu_ans2
         
-        if Gr<10**8 and Ra>10**4 and Ra<10**9: #:#Nureth Lin Xiana, b, Guangming Jianga, b, Hongxing Yua, b
-            Nu=0.48*Ra**0.25 #!!!!!!!!!!!!!hier nog even goed naar kijken!!!
-            
-        #elif Gr>4*10**9 and Ra<10**11 and Ra>10**10:# :     #komt niet in deze region
-        #    Nu=0.148*Ra**0.333
-            
-            #print('value Gr is smaller than 10^8, so falls in wrong regime Gr= %.3e' %(Gr))
+        if Gr<10**8 and Ra>10**4 and Ra<10**9: 
+            Nu=0.48*Ra**0.25
+
         h_c=Nu*lambda_water/(length/4)
     
     elif 0<=n<N/4 or N/2<=n<3*N/4: #horizontal pipe
@@ -260,31 +247,15 @@ def h_BC(n,v,T,Tb):
 
 
 '____________initial conditions____________'
-v0=0.000000000000000000000001#0.00000000000000000001
+v0=0.000000000000000000000001
 T0=(20+273.15)*np.ones(N)
 Tb0=(20+273.15)*np.ones(N)
 
 
 '_______________Initial guess_______________________'
-v_steadystate0=0.00115#1.0*10**-8#7.07*10**-13#0.03150#5*10**-5
+v_steadystate0=0.00115
 T_steadystate0=np.zeros(N)
 Tb_steadystate0=np.zeros(N)
-# for n in np.arange(0,N,1):
-#     if n<0.25*N:
-#         T_steadystate0[n]=(70+273.15)
-#         Tb_steadystate0[n]=(72+273.15)
-#     elif (n>0.25*N or n==0.25*N) and (n<0.5*N) :
-#         T_steadystate0[n]=(60+273.15)
-#         Tb_steadystate0[n]=(62+273.15)
-#     elif (n>0.5*N or n==0.5*N) and (n<0.75*N) :
-#         T_steadystate0[n]=(59+273.15)
-#         Tb_steadystate0[n]=(55+273.15)
-#     elif (n>0.75*N or n==0.75*N) and (n<N) :
-#         T_steadystate0[n]=(57+273.15)
-#         Tb_steadystate0[n]= (55+273.15)
-#     elif n>N:
-#         print('error in angle creation')
-
 
 for n in np.arange(0,N,1):
     if n<0.25*N:
@@ -323,52 +294,6 @@ for n in np.arange(0,N,1):
 #         318.24007771, 318.1980118 , 319.83781147, 319.84949599,
 #         319.86942196, 319.89561226, 319.90501333, 319.79924521,
 #         319.76140237, 319.81372857, 319.76409232, 319.77831997])
-
-# v_steadystate0=0.0024382357215700025
-# T_steadystate0=np.array([321.04991726, 321.135062  , 321.21787652, 321.29842567,
-#        321.37677203, 321.45297481, 321.52709019, 321.59917234,
-#        321.66927426, 321.73744847, 321.89634732, 322.05104885,
-#        322.20166411, 322.34830161, 322.49106717, 322.63006372,
-#        322.76539118, 322.8971466 , 323.02542426, 323.1503158 ,
-#        322.97663356, 322.80709401, 322.64159672, 322.48004332,
-#        322.3223371 , 322.1683835 , 322.01809034, 321.87136784,
-#        321.72812865, 321.5882878 , 321.51622683, 321.4464261 ,
-#        321.38004648, 321.3156411 , 321.25309461, 321.19245877,
-#        321.13330484, 321.07527462, 321.01829334, 320.96237686])
-# Tb_steadystate0=np.array([323.82182495, 323.83092064, 323.83976568, 323.84836698,
-#        323.85673115, 323.86486446, 323.87277304, 323.88046289,
-#        323.88793994, 323.89521008, 326.92687129, 326.94882399,
-#        326.97019043, 326.99098651, 327.01122771, 327.03092901,
-#        327.05010499, 327.06876976, 327.08693707, 327.10462026,
-#        317.62167487, 317.5798693 , 317.53898203, 317.49899338,
-#        317.4598839 , 317.42163451, 317.38422655, 317.34764178,
-#        317.31186237, 317.27687093, 319.34279385, 319.26365335,
-#        319.32451786, 319.3333531 , 319.35077446, 319.331713  ,
-#        319.30782417, 319.28434534, 319.26128467, 319.23864859])
-
-#v_steadystate0=0.0009422762947661532
-#T_steadystate0=np.array([320.57192048, 320.88700595, 321.18361936, 321.4628414 ,
-#         321.7256897 , 321.97312268, 322.20604312, 322.42530148,
-#         322.63169895, 322.82599018, 323.21060477, 323.57339125,
-#         323.91558769, 324.23836189, 324.54281527, 324.82998664,
-#         325.10085583, 325.35634708, 325.59733232, 325.82463412,
-#         325.27060295, 324.74768182, 324.2540814 , 323.78811856,
-#         323.34820993, 322.93286583, 322.54068453, 322.17034689,
-#         321.82061129, 321.49030897, 321.33514334, 321.18941691,
-#         321.05028279, 320.91743668, 320.79059261, 320.66947574,
-#         320.55382395, 320.44338716, 320.33792679, 320.23721512])
-#Tb_steadystate0=np.array([325.35397596, 325.38874528, 325.42145844, 325.45223781,
-#         325.48119839, 325.50844828, 325.53408912, 325.55821651,
-#         325.58092034, 325.60228515, 328.70600763, 328.75693842,
-#         328.80495324, 328.85022033, 328.89289804, 328.93313543,
-#         328.97107286, 329.00684249, 329.04056882, 329.07236911,
-#         318.1319643 , 318.00992085, 317.89414657, 317.78432665,
-#         317.68016179, 317.58136751, 317.48767335, 317.39882224,
-#         317.31456979, 317.23468367, 319.3480959 , 319.31210228,
-#         319.25790354, 319.20608794, 319.15655161, 319.10919501,
-#         319.06392284, 319.02064387, 318.97927069, 318.93971961])
-
-
 
 
 

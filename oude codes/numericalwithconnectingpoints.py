@@ -8,7 +8,7 @@ Created on Sun Jun 20 15:36:18 2021
 import parameters as p
 import numpy as np
 import matplotlib.pyplot as plt
-import fsolvenumerieekNieuw as fs
+import solvenumerieekNieuw as fs
 from tqdm import tqdm 
 
 blocks=p.N 

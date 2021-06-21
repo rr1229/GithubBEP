@@ -19,7 +19,6 @@ def gravity(v,T):
     grav=np.zeros(p.N)
     for n in np.arange(0,p.N,1):
         grav[n]=(p.rho_0-p.rho_0*p.beta*(T[n]-p.T_0))*np.sin(p.angle[n])        
-    #grav1=np.sum((p.rho_0-p.rho_0*p.beta*(T-p.T_0))*np.sin(p.angle))
     if v>0:
         grav1=sum(grav)
     else:
@@ -32,7 +31,6 @@ def system(U):
     v=U[0]
     T,Tb=np.array_split(U[1:],2)
     
-    #print('v=', v ,'\n T=',T, '\n Tb=',Tb)
     
     vzero=velocityzero(v, T, Tb)
     Tnzero=Tfluidzero(v, T, Tb)
@@ -202,13 +200,10 @@ for thick1 in drbelow:
                     h2=3.66*lambda_fluid/(2*r)
                     a=(h2-h1)/0.05
                     h=a*(Gz-0.05)+h1
-                    #h=270   #approximation for this regime
-                    #print('error in creation hfluid: Re= %.3e , Gz= %.3e and Pr= %.3e' %(Re, Gz, Pr))
-                
+
             return h
         
         def h_outside(n,v,T,Tb,m):
-            #Re=Reynolds(v, T[n])
             Gr=Grashof(m,Tb)
             Pr=nu_water/a_water
             Ra=Gr*Pr
@@ -217,13 +212,8 @@ for thick1 in drbelow:
                 Nu_ans2=(4/35)* ((272+315*Pr)/(64+63*Pr))*(length/(4*2*(r+dr[n])))
                 Nu=Nu_ans1+Nu_ans2
                 
-                if Gr<10**8 and Ra>10**4 and Ra<10**9: #:#Nureth Lin Xiana, b, Guangming Jianga, b, Hongxing Yua, b
-                    Nu=0.48*Ra**0.25 #!!!!!!!!!!!!!hier nog even goed naar kijken!!!
-                    
-                #elif Gr>4*10**9 and Ra<10**11 and Ra>10**10:# :     #komt niet in deze region
-                #    Nu=0.148*Ra**0.333
-                    
-                    #print('value Gr is smaller than 10^8, so falls in wrong regime Gr= %.3e' %(Gr))
+                if Gr<10**8 and Ra>10**4 and Ra<10**9: 
+                    Nu=0.48*Ra**0.25 
                 h_c=Nu*lambda_water/(length/4)
             
             elif 0<=n<N/4 or N/2<=n<3*N/4: #horizontal pipe
@@ -252,9 +242,7 @@ for thick1 in drbelow:
             Re=p.Reynolds(v, T)
             a=1/(1+((Re/2712)**8.4))
             b=1/(1+((Re/(150*2*r/p.eff))**1.8))
-            #df=64/Re
             df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(3.41*2*r/p.eff))**(2*(a-1)*(1-b)))
-            #df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(6.82*2*p.r/p.eff))**(2*(a-1)*(1-b)))
             f=np.sum(df)
             if v>0:
                 f1=f

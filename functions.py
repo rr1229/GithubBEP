@@ -18,24 +18,14 @@ def gammaheating(dr):
     P=p.u*p.rho_wall*Vwall
     return P
 
-#def gravity(T):
-#    #grav=0
-#    gravitysegment=(density(T)*np.sin(p.angle))
-#    grav=-np.sum(gravitysegment)
-#   # for j in np.arange(0,p.N,1) :
-#   #     grav=grav+(density(T[j])*np.sin(p.angle[j]))
-#    return grav
 
 def gravity(v,T):
-    #grav=0
     gravitysegment=(p.rho_0-p.rho_0*p.beta*(T-p.T_0))*np.sin(p.angle) 
     grav=np.sum(gravitysegment)
     if v>0:
         grav1=grav
     else:
         grav1=-grav
-   # for j in np.arange(0,p.N,1) :
-   #     grav=grav+(density(T[j])*np.sin(p.angle[j]))
     return grav1
 
 def darcyfriction(v,T):
@@ -43,8 +33,6 @@ def darcyfriction(v,T):
     a=1/(1+((Re/2712)**8.4))
     b=1/(1+((Re/(150*2*p.r/p.eff))**1.8))
     df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(3.41*2*p.r/p.eff))**(2*(a-1)*(1-b)))
-    #df=((64/Re)**a)*((0.75*np.log(Re/5.37))**(2*(a-1)*b))*((0.88*np.log(6.82*2*p.r/p.eff))**(2*(a-1)*(1-b)))
-    #df=64/Re
     f=np.sum(df)
     return f
 
@@ -93,17 +81,13 @@ def f2Tn(v,T,n,Tb):
 def f3Tb(T,n,Tb,v):
     
     if n<0.25*p.N:
-        #dr=p.dr1
         P=gammaheating(p.dr[n])
     elif (n>0.25*p.N or n==0.25*p.N) and (n<p.deel*p.N) :
         P=gammaheating(p.dr[n])
-        #dr=p.dr1
     elif (n>p.deel*p.N or n==p.deel*p.N) and (n<0.75*p.N) :
         P=gammaheating(p.dr[n])
-        #dr=p.dr2
     elif (n>0.75*p.N or n==0.75*p.N) and (n<p.N) :
         P=gammaheating(p.dr[n])
-        #dr=p.dr1
     elif n>p.N:
         
         print('error in gammaheating calculation in f3Tb')

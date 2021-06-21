@@ -7,7 +7,7 @@ Created on Thu Jun 10 22:38:30 2021
 import parameters as p
 import numpy as np
 import matplotlib.pyplot as plt
-import fsolvenumerieekNieuw as fs
+import solvenumerieekNieuw as fs
 from tqdm import tqdm 
 
 blocks=p.N #number of parts we use for numerical integration, would work best in multiples of 4
